@@ -51,6 +51,7 @@ def cargar(ventana):
     else:
         mensajeCargado['text'] = "No se ha encontrado el .txt"
     ventana.update()
+    
 ventana_principal=Tk()  
 ventana_principal.title("Memory")     
 ventana_principal.geometry("1400x720+280+0")

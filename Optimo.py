@@ -55,11 +55,12 @@ def getFaltantes(ptr):
             return paginasMarcadas[y][0]
 
 def optimo():
-    while(len(listaAccesosBarajados)>0):
-        if len(pRAM)<15:
+    while(len(listaAccesosBarajados)>1):
+        if len(pRAM)<10:
             pRAM.append(listaAccesosBarajados.pop(0))
+            sleep(2)
 
-        if len(pRAM)==15:
+        if len(pRAM)==10:
             max=0 #index de la pagina mas tardada
             for x in range(len(pRAM)):
                 accessosfaltantes =getFaltantes(pRAM[x][1])
@@ -68,9 +69,12 @@ def optimo():
 
             pVRAM.append(pRAM[x])
             pRAM[x]=listaAccesosBarajados.pop(0)
+            sleep(2)
 
         calcularAccesosfaltanttes()
 
+        print(pRAM)
+        print(pVRAM)
 
 
 
@@ -81,3 +85,4 @@ def optimo():
 
 
 print(paginasMarcadas)
+optimo()

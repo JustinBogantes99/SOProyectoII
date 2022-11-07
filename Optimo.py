@@ -1,6 +1,6 @@
 from time import sleep
 import random
-
+ 
 ListadeAccesos=[[1,1,500]
 ,[1,2,1024]
 ,[1,3,512]
@@ -76,7 +76,7 @@ def optimo():
 
 
 
- return
+    return
 
 
 

@@ -95,7 +95,6 @@ def optimo():
     while(len(listaAccesosBarajados)>1):
         if len(RAMOpt)<RAMSize:
             siguiente=listaAccesosBarajados.pop(0)
-           
             if RAMOpt.count(siguiente)==0:
                 if VRAMOpt.count(siguiente)>0:
                     VRAMOpt.remove(siguiente)
@@ -144,13 +143,8 @@ def optimo():
         print("RAM utilizada: ", RAMUtilizada)
         print("VRAM utilizada: ", VRAMUtilizada)
 
-        #print("RAM-",RAMOpt)
-        #print("VRRAM-",VRAMOpt)
-
-
-
-
-
+        print("RAM-",RAMOpt)
+        print("VRRAM-",VRAMOpt)
     return
 
 

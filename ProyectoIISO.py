@@ -10,6 +10,16 @@ from tkinter import messagebox
 from tkinter import filedialog as fd
 import tkinter as tk
 
+from General import MMU
+
+from Stats import Stats
+
+from Algoritmos import Optimo
+from Algoritmos import LRU
+from Algoritmos import Aging
+from Algoritmos import SecondChance
+from Algoritmos import Random
+
 import random
 from PIL import Image,ImageTk
 
@@ -56,8 +66,8 @@ ventana_principal=Tk()
 ventana_principal.title("Memory")     
 ventana_principal.geometry("1400x720+280+0")
 ventana_principal.resizable(0,0)
-img=ImageTk.PhotoImage(file="name.png")
-imgbtn=ImageTk.PhotoImage(file="simu.png")  
+img=ImageTk.PhotoImage(file="Assets/name.png")
+imgbtn=ImageTk.PhotoImage(file="Assets/simu.png")  
 LocalImg=Label(ventana_principal,image=img)
 LocalImg.place(x=100,y=100)
 open_button = ttk.Button(
@@ -77,4 +87,10 @@ FileNameLabel.place(x=100,y=400)
 btn_cargar=Button(ventana_principal,image=imgbtn,command=lambda:[ventana_iniciar(ventana_principal)],highlightthickness=1,bd=3)
 btn_cargar.place(x=600,y=640)
 
-ventana_principal.mainloop() 
+
+
+ventana_principal.mainloop()
+
+lru = LRU.LRU()
+optimo = Optimo.Optimo()
+

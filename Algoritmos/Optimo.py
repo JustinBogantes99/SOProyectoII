@@ -2,59 +2,63 @@ from time import sleep
 import random
 
 class Optimo:
-    def __init__(self):
-        self.ListadeAccesos=[[1,1,500]
-        ,[1,2,1024]
-        ,[1,3,512]
-        ,[2,4,256]
-        ,[2,5,512]
-        ,[3,6,128]
-        ,[3,7,1024]
-        ,[3,8,512]
-        ,[3,9,512]
-        ,[4,10,256]
-        ]
-        self.listaAccesosBarajados=[[1,1,500]
-        ,[3,6,128]
-        ,[1,2,1024]
-        ,[2,4,256]
-        ,[2,5,512]
-        ,[4,10,256]
-        ,[1,3,512]
-        ,[3,7,1024]
-        ,[4,10,256]
-        ,[3,8,512]
-        ,[1,1,500]
-        ,[2,5,512]
-        ,[3,8,512]
-        ,[3,9,512]
-        ,[3,7,1024]
-        ,[3,6,128]
-        ,[1,2,1024]
-        ,[2,4,256]
-        ,[2,5,512]
-        ,[4,10,256]
-        ,[1,3,512]
-        ,[3,7,1024]
-        ,[4,10,256]
-        ,[3,8,512]
-        ,[1,1,500]
-        ,[2,5,512]
-        ,[3,8,512]
-        ,[3,9,512]
-        ,[3,7,1024]
-        ]
+    def __init__(self,Stats,Accesos, AccesosBarajados,MMU):
+        self.ListadeAccesos=Accesos
+        #=[[1,1,500]
+        #,[1,2,1024]
+        #,[1,3,512]
+        #,[2,4,256]
+        #,[2,5,512]
+        #,[3,6,128]
+        #,[3,7,1024]
+        #,[3,8,512]
+        #,[3,9,512]
+       # ,[4,10,256]
+        
+        self.listaAccesosBarajados=AccesosBarajados#
+        #[[1,1,500]
+        #,[3,6,128]
+        #,[1,2,1024]
+        #,[2,4,256]
+        #,[2,5,512]
+        #,[4,10,256]
+        #,[1,3,512]#
+        #,[3,7,1024]
+        #,[4,10,256]
+        #,[3,8,512]
+        #,[1,1,500]
+        #,[2,5,512]
+        #,[3,8,512]
+        #,[3,9,512]
+        #,[3,7,1024]
+        #,[3,6,128]
+        #,[1,2,1024]
+       # ,[2,4,256]
+        #,[2,5,512]
+       # ,[4,10,256]
+       # ,[1,3,512]
+       # ,[3,7,1024]
+       # ,[4,10,256]
+      #  ,[3,8,512]
+       # ,[1,1,500]
+       # ,[2,5,512]
+       # ,[3,8,512]
+       # ,[3,9,512]
+       # ,[3,7,1024]
+       # ]
 
-        self.RAMSize=5
-        self.RAMTotal=self.RAMSize*4
-        self.RAMUtilizada=0
-        self.VRAMUtilizada=len
-        self.FragmentacionInternaOpt=0
-        self.TiempoSimOpt=0
-        self.TiempoTrashingOpt=0
+        #self.RAMSize=5
+        #self.RAMTotal=self.RAMSize*4
+        #self.RAMUtilizada=0
+        #self.VRAMUtilizada=len
+        #self.FragmentacionInternaOpt=0
+        #self.TiempoSimOpt=0
+        #self.TiempoTrashingOpt=0
         self.RAMOpt=[]
         self.VRAMOpt=[]
-        self.VRAMUtilizada=len(self.VRAMOpt)*4
+        #self.VRAMUtilizada=len(self.VRAMOpt)*4
+        self.stats=Stats
+        self.MMU=MMU
         self.paginasMarcadas=[]  #lista con las paginas y la cantidad de accesos a memoria necesarios antes de ser usada [accesos,[pagina]]
         for acceso in self.ListadeAccesos:
             self.paginasMarcadas.append([0,acceso])
@@ -87,12 +91,12 @@ class Optimo:
     def calcularFragmentacionInternaOpt(self):
         self.FragmentacionInternaOpt=0
         for pagina in self.RAMOpt:
-            self.FragmentacionInternaOpt = self.FragmentacionInternaOpt + ((4000-pagina[2])/1000)
-        return self.FragmentacionInternaOpt
+            self.stats.FragmentacionInterna = self.stats.FragmentacionInterna + ((4000-pagina[2])/1000)
+        return self.stats.FragmentacionInterna
 
     def calcularRAMUtilizadaYVRAM(self):
-        self.RAMUtilizada=len(self.RAMOpt*4)
-        self.VRAMUtilizada = len(self.VRAMOpt*4)
+        self.stats.RAMUtilizada=len(self.RAMOpt*4)
+        self.stats.VRAMUtilizada = len(self.VRAMOpt*4)
 
     def optimo(self):
         while(len(self.listaAccesosBarajados)>1):
@@ -102,14 +106,14 @@ class Optimo:
                     if self.VRAMOpt.count(siguiente)>0:
                         self.VRAMOpt.remove(siguiente)
                         self.RAMOpt.append(siguiente)
-                        self.TiempoSimOpt = self.TiempoSimOpt+5
-                        self.TiempoTrashingOpt = self.TiempoTrashingOpt+5
+                        self.stats.TiempoSimulado = self.stats.TiempoSimulado+5
+                        self.stats.TiempoTrashing = self.stats.TiempoTrashing+5
 
                     self.RAMOpt.append(siguiente)
-                    self.TiempoSimOpt = self.TiempoSimOpt+1
+                    self.stats.TiempoSimulado = self.stats.TiempoSimulado+1
                 
                 else:
-                    self.TiempoSimOpt = self.TiempoSimOpt + 1
+                    self.stats.TiempoSimulado = self.stats.TiempoSimulado + 1
 
                 sleep(2)
 
@@ -129,20 +133,20 @@ class Optimo:
                         self.VRAMOpt.remove(siguiente)
                     self.VRAMOpt.append(self.RAMOpt[maxIndx])
                     self.RAMOpt[maxIndx] = siguiente
-                    self.TiempoTrashingOpt = self.TiempoTrashingOpt + 5
-                    self.TiempoSimOpt = self.TiempoSimOpt + 6
+                    self.stats.TiempoTrashing  = self.stats.TiempoTrashing  + 5
+                    self.stats.TiempoSimulado = self.stats.TiempoSimulado + 6
                 
-                self.TiempoSimOpt = self.TiempoSimOpt + 1
+                self.stats.TiempoSimulado = self.stats.TiempoSimulado + 1
 
                 sleep(2)
 
             self.calcularAccesosfaltanttes()
             self.calcularFragmentacionInternaOpt()
             self.calcularRAMUtilizadaYVRAM()
-            print("Tiempo total: ",self.TiempoSimOpt)
-            print("Tiempo de Trashing: ",self.TiempoTrashingOpt)
-            print("RAM utilizada: ", self.RAMUtilizada)
-            print("VRAM utilizada: ", self.VRAMUtilizada)
+            print("Tiempo total: ",self.stats.TiempoSimulado)
+            print("Tiempo de Trashing: ",self.stats.TiempoTrashing)
+            print("RAM utilizada: ", self.stats.RAMUtilizada)
+            print("VRAM utilizada: ", self.stats.VRAMUtilizada)
 
             print("RAM-",self.RAMOpt)
             print("VRRAM-",self.VRAMOpt)

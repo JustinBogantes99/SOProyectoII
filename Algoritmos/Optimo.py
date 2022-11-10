@@ -2,72 +2,14 @@ from time import sleep
 import random
 
 class Optimo:
-    def __init__(self,Stats,Accesos, AccesosBarajados,MMU):
-        self.ListadeAccesos=Accesos
-        #=[[1,1,500]
-        #,[1,2,1024]
-        #,[1,3,512]
-        #,[2,4,256]
-        #,[2,5,512]
-        #,[3,6,128]
-        #,[3,7,1024]
-        #,[3,8,512]
-        #,[3,9,512]
-       # ,[4,10,256]
-        
-        self.listaAccesosBarajados=AccesosBarajados#
-        #[[1,1,500]
-        #,[3,6,128]
-        #,[1,2,1024]
-        #,[2,4,256]
-        #,[2,5,512]
-        #,[4,10,256]
-        #,[1,3,512]#
-        #,[3,7,1024]
-        #,[4,10,256]
-        #,[3,8,512]
-        #,[1,1,500]
-        #,[2,5,512]
-        #,[3,8,512]
-        #,[3,9,512]
-        #,[3,7,1024]
-        #,[3,6,128]
-        #,[1,2,1024]
-       # ,[2,4,256]
-        #,[2,5,512]
-       # ,[4,10,256]
-       # ,[1,3,512]
-       # ,[3,7,1024]
-       # ,[4,10,256]
-      #  ,[3,8,512]
-       # ,[1,1,500]
-       # ,[2,5,512]
-       # ,[3,8,512]
-       # ,[3,9,512]
-       # ,[3,7,1024]
-       # ]
-
-        #self.RAMSize=5
-        #self.RAMTotal=self.RAMSize*4
-        #self.RAMUtilizada=0
-        #self.VRAMUtilizada=len
-        #self.FragmentacionInternaOpt=0
-        #self.TiempoSimOpt=0
-        #self.TiempoTrashingOpt=0
-        self.RAMOpt=[]
-        self.VRAMOpt=[]
-        #self.VRAMUtilizada=len(self.VRAMOpt)*4
-        self.stats=Stats
-        self.MMU=MMU
+    def __init__(self, simulador):
+        self.simulador = simulador
         self.paginasMarcadas=[]  #lista con las paginas y la cantidad de accesos a memoria necesarios antes de ser usada [accesos,[pagina]]
         for acceso in self.ListadeAccesos:
             self.paginasMarcadas.append([0,acceso])
 
-        
         print(self.paginasMarcadas)
         self.optimo()
-
-
 
     #Calcula cuantos accesos a memoria faltan para que la paginas sea usada de nuevo
     def calcularAccesosfaltanttes(self):

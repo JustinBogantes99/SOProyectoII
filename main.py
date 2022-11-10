@@ -10,15 +10,7 @@ from tkinter import messagebox
 from tkinter import filedialog as fd
 import tkinter as tk
 
-from General import MMU
-
-from Stats import Stats
-
-from Algoritmos import Optimo
-from Algoritmos import LRU
-from Algoritmos import Aging
-from Algoritmos import SecondChance
-from Algoritmos import Random
+from . import Simulador
 
 import random
 from PIL import Image,ImageTk
@@ -91,6 +83,5 @@ btn_cargar.place(x=600,y=640)
 
 ventana_principal.mainloop()
 
-lru = LRU.LRU()
-optimo = Optimo.Optimo()
-
+optimo = Simulador("Optimo")
+lru = Simulador("LRU")

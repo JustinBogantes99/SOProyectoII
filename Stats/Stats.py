@@ -1,7 +1,4 @@
 class Stats:
-    
-
-
     def __init__(self):
         self.TiempoSimulado =0
         self.TiempoTrashing =0
@@ -11,4 +8,3 @@ class Stats:
         self.PaginasEnMemoria=0
         self.PaginasEnDisco=0
         self.RAMTotal=400
-        pass

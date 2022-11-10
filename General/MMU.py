@@ -1,3 +1,6 @@
+from itemMMU import itemMMU
+
 class MMU:
     def __init__(self):
-        pass
+        self.listaDeCositas = {}
+        # item : {pageid -> itemMMU}

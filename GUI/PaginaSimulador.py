@@ -24,6 +24,34 @@ class PaginaSimulador(tk.Frame):
         )
         optimo_button.pack(side="bottom", fill=tk.X)
 
+        aging_button = tk.Button(
+            self,
+            text="Correr optimo",
+            command=self.aging,
+        )
+        aging_button.pack(side="bottom", fill=tk.X)
+
+        lru_button = tk.Button(
+            self,
+            text="Correr lru",
+            command=self.lru,
+        )
+        lru_button.pack(side="bottom", fill=tk.X)
+
+        random_button = tk.Button(
+            self,
+            text="Correr random",
+            command=self.random,
+        )
+        random_button.pack(side="bottom", fill=tk.X)
+
+        secondchance_button = tk.Button(
+            self,
+            text="Correr secondchance",
+            command=self.secondchance,
+        )
+        secondchance_button.pack(side="bottom", fill=tk.X)
+
         switch_window_button = tk.Button(
             self,
             text="Debug",
@@ -36,6 +64,23 @@ class PaginaSimulador(tk.Frame):
 
     def optimo(self):
         self.simulador_optimo = Simulador("Optimo", self.controller.fileContent)
+        self.simulador_optimo.correr_algoritmo()
+
+    def aging(self):
+        self.simulador_optimo = Simulador("Aging", self.controller.fileContent)
+        self.simulador_optimo.correr_algoritmo()
+
+    def lru(self):
+        self.simulador_optimo = Simulador("LRU", self.controller.fileContent)
+        self.simulador_optimo.correr_algoritmo()
+
+    def random(self):
+        self.simulador_optimo = Simulador("Random", self.controller.fileContent)
+        self.simulador_optimo.correr_algoritmo()
+
+    def secondchance(self):
+        self.simulador_optimo = Simulador("SecondChance", self.controller.fileContent)
+        self.simulador_optimo.correr_algoritmo()
 
 class PaginaDebugger(tk.Frame):
     def __init__(self, parent, controller):

@@ -31,6 +31,9 @@ class Simulador:
     if tipoSimulador == "Aging":
       self.algoritmo = Aging(self)
 
+  def barajar(self):
+    pass
+
   def correr_algoritmo(self):
     self.algoritmo.simular()
   

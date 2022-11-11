@@ -4,15 +4,16 @@ from Algoritmos.Optimo import Optimo
 from Algoritmos.Random import Random
 from Algoritmos.SecondChance import SecondChance
 
-from General.Memoria import Memoria
-from General.MMU import MMU
+from .Memoria import Memoria
+from .MMU import MMU
+from .itemMMU import itemMMU
+from .Pagina import Pagina
+
 from Stats.Stats import Stats
 
-from General.itemMMU import itemMMU
-from General.Pagina import Pagina
-
 class Simulador:
-  def __init__(self, tipoSimulador,txt):
+  def __init__(self, tipoSimulador, txt):
+    self.txt = txt
     self.varasBarajadas = None
     self.varasSinBarajar = None
     self.RAM = Memoria()
@@ -29,6 +30,9 @@ class Simulador:
       self.algoritmo = SecondChance(self)
     if tipoSimulador == "Aging":
       self.algoritmo = Aging(self)
+
+  def correr_algoritmo(self):
+    self.algoritmo.simular()
   
   def leer_txt(self):
     pass

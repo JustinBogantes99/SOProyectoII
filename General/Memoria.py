@@ -1,4 +1,4 @@
-from Pagina import Pagina 
+from .Pagina import Pagina 
 
 class Memoria:
     def __init__(self):

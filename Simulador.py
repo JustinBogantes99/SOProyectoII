@@ -12,7 +12,7 @@ from General.itemMMU import itemMMU
 from General.Pagina import Pagina
 
 class Simulador:
-  def __init__(self, tipoSimulador):
+  def __init__(self, tipoSimulador,txt):
     self.varasBarajadas = None
     self.varasSinBarajar = None
     self.RAM = Memoria()

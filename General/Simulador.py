@@ -67,6 +67,7 @@ class Simulador:
       nuevaPagina.PID=pagina[0]
       nuevaPagina.Ptr=pagina[1]
       nuevaPagina.Size=pagina[2]
+      nuevaPagina.Contador=0
       self.varasSinBarajar.append(nuevaPagina)
 
     for pagina in ListaAccesosBarajados:
@@ -74,6 +75,7 @@ class Simulador:
       nuevaPagina.PID=pagina[0]
       nuevaPagina.Ptr=pagina[1]
       nuevaPagina.Size=pagina[2]
+      nuevaPagina.Contador=0
       self.varasBarajadas.append(nuevaPagina)      
 
     print("baraje")

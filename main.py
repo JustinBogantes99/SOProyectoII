@@ -2,8 +2,8 @@ from GUI.gui import Windows
 from General.Simulador import Simulador
 
 def main():
-    simulador_optimo = Simulador("LRU", None)
-    simulador_optimo.correr_algoritmo()
+    gui = Windows()
+    gui.mainloop()
 
 
 if __name__ == "__main__":

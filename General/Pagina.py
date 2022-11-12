@@ -1,4 +1,5 @@
 from pprint import pprint
+
 class Pagina:
     def __init__(self):
         self.PID = None

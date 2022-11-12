@@ -12,3 +12,7 @@ class Memoria:
                 return True
         
         return False
+
+    def to_string(self):
+        for cont in self.contenido:
+            cont.to_string()

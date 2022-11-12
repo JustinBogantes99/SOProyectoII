@@ -41,7 +41,12 @@ class Random:
         while(len(self.simulador.varasBarajadas)>1):
             if len(self.simulador.RAM.contenido) < self.RAMSize:
                 siguiente=self.simulador.varasBarajadas.pop(0)
-                if self.simulador.RAM.contenido.count(siguiente)==0:
+                if self.simulador.RAM.encontrar(siguiente.Ptr):
+                    print("esta")
+                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
+                
+                else:
+
                     print("no esta")
                     if self.simulador.VRAM.contenido.count(siguiente)>0:
                         self.simulador.VRAM.contenido.remove(siguiente)
@@ -51,29 +56,25 @@ class Random:
 
                     self.simulador.RAM.contenido.append(siguiente)
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
-                
-                else:
-                    print("esta")
-                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
 
                 sleep(2)
 
             if len(self.simulador.RAM.contenido) >= self.RAMSize:
                 siguiente= self.simulador.varasBarajadas.pop(0)
                 elegido=random.randint(0,len(self.simulador.RAM.contenido)-1)
-                if self.simulador.RAM.contenido.count(siguiente)==0:
-                    print("no esta")
+                if self.simulador.RAM.encontrar(siguiente.Ptr):
+                    print("esta")
+                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
                     
-                    if self.simulador.VRAM.contenido.count(siguiente)>0:
+                    
+                
+                else:
+                    if self.simulador.VRAM.encontrar(siguiente.Ptr):
                         self.simulador.VRAM.contenido.remove(siguiente)
                     self.simulador.VRAM.contenido.append(self.simulador.RAM.contenido[elegido])
                     self.simulador.RAM.contenido[elegido] = siguiente
                     self.simulador.stats.TiempoTrashing  = self.simulador.stats.TiempoTrashing  + 5
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 6
-                
-                else:
-                    print("esta")
-                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
 
                 sleep(2)
 

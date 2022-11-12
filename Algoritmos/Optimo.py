@@ -50,7 +50,7 @@ class Optimo:
         while(len(self.simulador.varasBarajadas)>1):
             if len(self.simulador.RAM.contenido) < self.RAMSize:
                 siguiente=self.simulador.varasBarajadas.pop(0)
-                if self.simulador.RAM.contenido.count(siguiente)==0:
+                if not self.simulador.RAM.encontrar(siguiente.Ptr):
                     if self.simulador.VRAM.contenido.count(siguiente)>0:
                         self.simulador.VRAM.contenido.remove(siguiente)
                         self.simulador.RAM.contenido.append(siguiente)
@@ -67,7 +67,7 @@ class Optimo:
 
             if len(self.simulador.RAM.contenido) >= self.RAMSize:
                 siguiente= self.simulador.varasBarajadas.pop(0)
-                if self.simulador.RAM.contenido.count(siguiente)==0:
+                if not self.simulador.RAM.encontrar(siguiente.Ptr):
                     maxIndx=0 #index de la pagina mas tardada
                     max=0 #accesos faltantes
                     for x in range(len(self.simulador.RAM.contenido)):

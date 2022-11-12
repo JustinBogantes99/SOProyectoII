@@ -10,9 +10,9 @@ class Windows(tk.Tk):
         self.fileContent = []
 
         self.wm_title("Proyecto II: Sistemas Operativos")
-        self.geometry("1400x720+280+0")
+        self.geometry("1500x720+280+0")
 
-        container = tk.Frame(self, height=200, width=200)
+        container = tk.Frame(self, height=300, width=300)
         container.pack(side="top", fill="both", expand=True)
 
         container.grid_rowconfigure(0, weight=1)

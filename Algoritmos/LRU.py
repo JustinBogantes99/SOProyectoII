@@ -72,4 +72,16 @@ class LRU:
                         if pag.PID==siguiente.PID:
                             pag.contador=0
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
-1
+        self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM)
+        self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM)
+        print("Tiempo total: ",self.simulador.stats.TiempoSimulado)
+        print("Tiempo de Trashing: ",self.simulador.stats.TiempoTrashing)
+        print("RAM utilizada: ", self.simulador.stats.RAMUtilizada)
+        print("VRAM utilizada: ", self.simulador.stats.VRAMUtilizada)
+
+        print("RAM-",self.simulador.RAM)
+        print("VRRAM-",self.simulador.VRAM)
+
+        
+    def simular(self):
+        self.run(self)

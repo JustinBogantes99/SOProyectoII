@@ -45,6 +45,7 @@ class Optimo:
 
     def simular(self):
         while(len(self.simulador.varasBarajadas)>1):
+            sleep(2)
             siguiente=self.simulador.varasBarajadas.pop(0)
 
             print("\n\n\n")

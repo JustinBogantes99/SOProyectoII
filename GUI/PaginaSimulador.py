@@ -1,11 +1,18 @@
 from .shared_imports import *
 from General.Simulador import Simulador
+import random
+import threading
 
 class PaginaSimulador(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.parent = parent
         self.simulador_optimo = None
+        self.simulador_aging = None
+        self.simulador_lru = None
+        self.simulador_random = None
+        self.simulador_secondchance = None
         self.simulador_usuario = None
         label = tk.Label(self, text="Aqui va el simulador con las tablas")
         label.pack(padx=10, pady=10)
@@ -90,12 +97,25 @@ class PaginaSimulador(tk.Frame):
         switch_window_button = tk.Button(
             self,
             text="Debug",
-            command=lambda: controller.show_frame(PaginaDebugger),
+            command=self.correr_simulacion,
         )
         switch_window_button.pack(side="bottom", fill=tk.X)
+        test = str(random.randint(0, 5))
 
-    def acomodar(self,):
-        pass
+        self.label_test = tk.Label(self, text=test)
+        self.label_test.place(x=500, y=500)
+
+        
+        self.t1 = threading.Thread(target=self.optimo)
+        self.t2 = threading.Thread(target=self.lru)
+    # ESTA FUNCION ES PARA EDITAR TODOS LOS LABELS PARA QUE SE ACTUALICE LA GUI
+    def draw(self):
+        self.label_test['text'] = str(random.randint(0, 5))
+        self.parent.after(500, self.draw)
+    # ESTA FUNCION SIRVE TEMPORALMENTE PARA CORRER EL DRAW Y EL OPTIMO
+    def correr_simulacion(self):
+        self.t1.start() # DONDE COLOCAR LOS JOINS?
+        self.draw()
 
     def test(self):
         print(self.controller.fileContent)
@@ -105,20 +125,20 @@ class PaginaSimulador(tk.Frame):
         self.simulador_optimo.correr_algoritmo()
 
     def aging(self):
-        self.simulador_optimo = Simulador("Aging", self.controller.fileContent)
-        self.simulador_optimo.correr_algoritmo()
+        self.simulador_aging = Simulador("Aging", self.controller.fileContent)
+        self.simulador_aging.correr_algoritmo()
 
     def lru(self):
-        self.simulador_optimo = Simulador("LRU", self.controller.fileContent)
-        self.simulador_optimo.correr_algoritmo()
+        self.simulador_lru = Simulador("LRU", self.controller.fileContent)
+        self.simulador_lru.correr_algoritmo()
 
     def random(self):
-        self.simulador_optimo = Simulador("Random", self.controller.fileContent)
-        self.simulador_optimo.correr_algoritmo()
+        self.simulador_random = Simulador("Random", self.controller.fileContent)
+        self.simulador_random.correr_algoritmo()
 
     def secondchance(self):
-        self.simulador_optimo = Simulador("SecondChance", self.controller.fileContent)
-        self.simulador_optimo.correr_algoritmo()
+        self.simulador_secondchance = Simulador("SecondChance", self.controller.fileContent)
+        self.simulador_secondchance.correr_algoritmo()
 
 class PaginaDebugger(tk.Frame):
     def __init__(self, parent, controller):

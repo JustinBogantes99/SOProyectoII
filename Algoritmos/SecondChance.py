@@ -1,86 +1,103 @@
 class SecondChance:
-    def __init__(self):
-        pass
+    def __init__(self, simulador):
+        self.simulador = simulador
+        self.first_in = -1
 
-    def marks(self, x, arr, second_chance, paginas):
-        for i in range(paginas):
-              
-            if arr[i] == x:
-                second_chance[i] = True
-                return True
-          
-        return False
-      
-    def paging(self, x, arr, second_chance, paginas, pointer):
-        while(True):
-            if not second_chance[pointer]:
-                arr[pointer] = x
 
-                return (pointer+1)%paginas
+    def paging_bueno(self, pagina_a_ram):
+        paging_not_done = True
+        while paging_not_done:
+            candidate = self.simulador.RAM.contenido.pop(0)
+            if candidate.mark == True:
+                candidate.mark = False
+                self.simulador.RAM.contenido.append(candidate)
+            else:
+                self.simulador.VRAM.contenido.append(candidate)
+                self.simulador.RAM.contenido.append(pagina_a_ram)
+                paging_not_done = False
+                break
 
-            second_chance[pointer] = False
-              
-            pointer = (pointer + 1) % paginas
-      
-    def simular(self, reference_string, paginas):
-          
-        pointer = 0
-        pf = 0
-        arr = [0]*paginas
-        for s in range(paginas):
-            arr[s] = -1
 
-        second_chance = [False]*paginas
-        Str = reference_string.split(' ')
-          
-        l = len(Str)
-          
-        for i in range(l):
-            x = Str[i]
-
-            if not self.marks(x,arr,second_chance,paginas):
-                pointer = self.paging(x,arr,second_chance,paginas,pointer)
-                pf += 1
-
-    def simular_real(self):
-        while(len(self.simulador.varasBarajadas)>1):
-            first_in = 0
+    def simular(self):
+        while(len(self.simulador.varasBarajadas)>0):
             siguiente = self.simulador.varasBarajadas.pop(0)
+
+            print("\n\n\n")
+            print("---------------------")
+            print("Iteración", len(self.simulador.varasBarajadas))
+            print("Tomando la página PID", siguiente.PID, " Ptr", siguiente.Ptr)
+            print("Actualmente la RAM tiene: \n\n")
+            print(self.simulador.RAM.to_string())
+            print("Actualmente la VRAM tiene: \n\n")
+            print(self.simulador.VRAM.to_string())
+            print("Actualmente la MMU tiene: \n\n")
+            print(self.simulador.MMU.to_string())
+            print("Actualmente el puntero FIFO es: ", self.first_in)
+            print("\n\n\n")
 
             # Si no se ha llenado la RAM
             if len(self.simulador.RAM.contenido) < 5: # self.simulador.RAMSize
-                print("La RAM no está llena, metiendo un nuevo proceso")
                 # La pagina no se encuentra en RAM
                 if self.simulador.RAM.encontrar(siguiente.Ptr)==False:
+
                     # La pagina se encuentra en VRAM
                     if self.simulador.VRAM.encontrar(siguiente.Ptr)==True:
-                        self.simulador.VRAM.contenido.remove(siguiente)
-                        self.simulador.RAM.contenido.append(siguiente)
-                        self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 5
-                        self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing + 5
-      
+                        for index, pagina in enumerate(self.simulador.VRAM.contenido):
+                            if pagina.Ptr == siguiente.Ptr:
+                                pagina_a_ram = self.simulador.VRAM.contenido.pop(index)
+                                break
+                        self.paging_bueno(pagina_a_ram)
+
+                    # La pagina no esta en VRAM - Metiendo a la RAM directamente
                     self.simulador.RAM.contenido.append(siguiente)
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
-                # La página se encontró en RAM
+                # La página se encontró en RAM - (Second Chance)
                 elif self.simulador.RAM.encontrar(siguiente.Ptr)==True:
-                    for pag in self.self.simulador.RAM.contenido:
-                        if pag.Ptr == siguiente.Ptr:
-                            pag.contador=0
+                    for index, pagina in enumerate(self.simulador.RAM.contenido):
+                        if pagina.Ptr == siguiente.Ptr:
+                            pagina.mark=True
+                            temp = self.simulador.RAM.contenido.pop(index)
+                            self.simulador.RAM.contenido.append(temp)
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
-            # Si la RAM esta llena
+            # Si la RAM esta llena - Page fault
             else:
                 # Si la pagina no se encuentra en RAM
                 if self.simulador.RAM.encontrar(siguiente.Ptr)==False:
                     
                     # Si la página se encuentra en VRAM
                     if self.simulador.VRAM.encontrar(siguiente.Ptr)==True:
-                        pass
+                        for index, pagina in enumerate(self.simulador.VRAM.contenido):
+                            if pagina.Ptr == siguiente.Ptr:
+                                pagina_a_ram = self.simulador.VRAM.contenido.pop(index)
+                                break
+                        self.paging_bueno(pagina_a_ram)
+                        
 
-                    # La página no se encontro en VRAM - Hay que crearla
+                    # La página no se encontro en VRAM - Hay que crearla y hacer paging
                     else:
-                        pass
+                        self.paging_bueno(siguiente) 
+
+
                 # La página se encontró en RAM (Aplicar Second Chance)
                 elif self.simulador.RAM.encontrar(siguiente.Ptr):
-                    pass
+                    for index, pagina in enumerate(self.simulador.RAM.contenido):
+                        if pagina.Ptr == siguiente.Ptr:
+                            pagina.mark=True
+                            temp = self.simulador.RAM.contenido.pop(index)
+                            self.simulador.RAM.contenido.append(temp)
+                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
+            print("TERMINE LA ITERACION")
+        print("\n\n\n")
+        print("RESULTADO FINAL DE LA SIMULACION")
+        print("---------------------")
+        print("Iteración", len(self.simulador.varasBarajadas))
+        print("Tomando la página PID", siguiente.PID, " Ptr", siguiente.Ptr)
+        print("Actualmente la RAM tiene: \n\n")
+        print(self.simulador.RAM.to_string())
+        print("Actualmente la VRAM tiene: \n\n")
+        print(self.simulador.VRAM.to_string())
+        print("Actualmente la MMU tiene: \n\n")
+        print(self.simulador.MMU.to_string())
+        print("\n\n\n")

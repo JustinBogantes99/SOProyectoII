@@ -22,14 +22,12 @@ class Optimo:
                     if self.simulador.varasSinBarajar[x].Ptr != self.simulador.varasBarajadas[y].Ptr:
                         contador=contador+1
                     else:
-                        break 
-                print(x)
+                        break
                 self.paginasMarcadas[x][0]=contador
 
     #Devuelve la cantidad de accesoss faltantes para utilizar la pagina ptr       
     def getFaltantes(self, ptr):
         for y in range( len(self.paginasMarcadas)):
-            print(self.paginasMarcadas[y])
             if self.paginasMarcadas[y][1].Ptr ==ptr:
                 return self.paginasMarcadas[y][0]
 
@@ -48,24 +46,52 @@ class Optimo:
     def simular(self):
         while(len(self.simulador.varasBarajadas)>1):
             siguiente=self.simulador.varasBarajadas.pop(0)
+
+            print("\n\n\n")
+            print("---------------------")
+            print("Iteración", len(self.simulador.varasBarajadas))
+            print("Tomando la página PID", siguiente.PID, " Ptr", siguiente.Ptr)
+            print("Actualmente la RAM tiene: \n\n")
+            print(self.simulador.RAM.to_string())
+            print("Actualmente la VRAM tiene: \n\n")
+            print(self.simulador.VRAM.to_string())
+            print("Actualmente la MMU tiene: \n\n")
+            print(self.simulador.MMU.to_string())
+            print("\n\n\n")
+
+            # La RAM todavía no está llena
             if len(self.simulador.RAM.contenido) < self.RAMSize:
+
+                # No se pudo encontrar la página en la RAM
                 if not self.simulador.RAM.encontrar(siguiente.Ptr):
                     #self.simulador.VRAM.encontrar(siguiente.Ptr)==True  
                     #no seria cambiar a esto?
-                    if self.simulador.VRAM.contenido.count(siguiente)>0:
-                        self.simulador.VRAM.contenido.remove(siguiente)
+
+                    # La página se encontró en la VRAM
+                    if self.simulador.VRAM.encontrar(siguiente.Ptr)==True:
+                        print("VRAM NO FULL PAGE FAULT - TOMANDO PAGINA DE VRAM")
+                        for index, pagina in enumerate(self.simulador.VRAM.contenido):
+                            if pagina.Ptr == siguiente.Ptr:
+                                self.simulador.VRAM.contenido.pop(index)
+                                break
                         self.simulador.RAM.contenido.append(siguiente)
                         self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+5
                         self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing+5
-                    
+
+                    # La pagina no esta en RAM, hay que agregarla sin paging
                     self.simulador.RAM.contenido.append(siguiente)
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
+
+                # La página se encontró en la RAM
                 else:
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
                 #sleep(2)
 
+            # La RAM está llena
             else:
+                # La Pagina no está en la RAM
                 if not self.simulador.RAM.encontrar(siguiente.Ptr):
+                    print("PAGE FAULT - LA PAGINA NO ESTA EN LA RAM")
                     maxIndx=0 #index de la pagina mas tardada
                     max=0 #accesos faltantes
                     for x in range(len(self.simulador.RAM.contenido)):
@@ -73,13 +99,24 @@ class Optimo:
                         if accessosfaltantes > max:
                             max = accessosfaltantes
                             maxIndx = x
-
-                    if self.simulador.VRAM.contenido.count(siguiente)>0:
-                        self.simulador.VRAM.contenido.remove(siguiente)
+                    # La página se encontró en la VRAM
+                    print("REVISANDO")
+                    print(siguiente.to_string())
+                    print(self.simulador.VRAM.to_string())
+                    if self.simulador.VRAM.encontrar(siguiente.Ptr)==True:
+                        print("PAGE FAULT - TOMANDO PAGINA DE VRAM")
+                        for index, pagina in enumerate(self.simulador.VRAM.contenido):
+                            print("BUSCANDO PAGINA PARA ELIMINAR DE VRAM")
+                            if pagina.Ptr == siguiente.Ptr:
+                                print("ENCONTRE LA PAGINA QUE OCUPO ELIMINAR")
+                                self.simulador.VRAM.contenido.pop(index)
+                                break
                     self.simulador.VRAM.contenido.append(self.simulador.RAM.contenido[maxIndx])
                     self.simulador.RAM.contenido[maxIndx] = siguiente
                     self.simulador.stats.TiempoTrashing  = self.simulador.stats.TiempoTrashing  + 5
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 6
+
+                # La página esta en la RAM
                 else:
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
 
@@ -90,11 +127,11 @@ class Optimo:
             self.calcularRAMUtilizadaYVRAM()
             self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM.contenido)
             self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM.contenido)
-            print("Tiempo total: ",self.simulador.stats.TiempoSimulado)
-            print("Tiempo de Trashing: ",self.simulador.stats.TiempoTrashing)
-            print("RAM utilizada: ", self.simulador.stats.RAMUtilizada)
-            print("VRAM utilizada: ", self.simulador.stats.VRAMUtilizada)
 
-            print("RAM-",self.simulador.RAM.contenido)
-            print("VRRAM-",self.simulador.VRAM.contenido)
-        return
+        print("Tiempo total: ",self.simulador.stats.TiempoSimulado)
+        print("Tiempo de Trashing: ",self.simulador.stats.TiempoTrashing)
+        print("RAM utilizada: ", self.simulador.stats.RAMUtilizada)
+        print("VRAM utilizada: ", self.simulador.stats.VRAMUtilizada)
+
+        print("RAM-",self.simulador.RAM.contenido)
+        print("VRRAM-",self.simulador.VRAM.contenido)

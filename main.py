@@ -8,8 +8,8 @@ def main():
     # simulador_lru = Simulador("LRU", None)
     # simulador_lru.correr_algoritmo()
 
-    simulador_secondchance = Simulador("SecondChance", None)
-    simulador_secondchance.correr_algoritmo()
+    # simulador_secondchance = Simulador("SecondChance", None)
+    # simulador_secondchance.correr_algoritmo()
 
     # simulador_optimo = Simulador("Optimo", None)
     # simulador_optimo.correr_algoritmo()

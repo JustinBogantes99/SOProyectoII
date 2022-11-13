@@ -1,7 +1,6 @@
 class SecondChance:
     def __init__(self, simulador):
         self.simulador = simulador
-        self.first_in = -1
 
 
     def paging_bueno(self, pagina_a_ram):
@@ -32,7 +31,6 @@ class SecondChance:
             print(self.simulador.VRAM.to_string())
             print("Actualmente la MMU tiene: \n\n")
             print(self.simulador.MMU.to_string())
-            print("Actualmente el puntero FIFO es: ", self.first_in)
             print("\n\n\n")
 
             # Si no se ha llenado la RAM
@@ -73,12 +71,10 @@ class SecondChance:
                                 pagina_a_ram = self.simulador.VRAM.contenido.pop(index)
                                 break
                         self.paging_bueno(pagina_a_ram)
-                        
 
                     # La página no se encontro en VRAM - Hay que crearla y hacer paging
                     else:
                         self.paging_bueno(siguiente) 
-
 
                 # La página se encontró en RAM (Aplicar Second Chance)
                 elif self.simulador.RAM.encontrar(siguiente.Ptr):

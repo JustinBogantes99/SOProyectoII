@@ -3,6 +3,7 @@ from .itemMMU import itemMMU
 class MMU:
     def __init__(self):
         self.listaDeCositas = {}
+        self.logicAddresCounter=0
         # item : {pageid -> itemMMU}
 
     #llamar cuando entra por primera vez una pagina a memoria
@@ -12,6 +13,7 @@ class MMU:
             pass
         else:
             self.listaDeCositas[ptr]=item
+            self.logicAddresCounter=self.logicAddresCounter+1
 
     #se llama cuando se pagina una pagina, de RAM a VRAM o viceversa
     

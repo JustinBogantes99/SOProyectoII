@@ -55,10 +55,10 @@ class Random:
                 else:
                     self.simulador.RAM.contenido.append(siguiente)
                     #Actualizar MMU                   
-                    self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.logicAddresCounter,len(self.simulador.RAM.contenido)-1,"-","-")
+                    self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter,len(self.simulador.RAM.contenido)-1,"-","-")
 
-                    if not siguiente.Ptr in self.simulador.MMU.listaDeCositas: 
-                        self.logicAddresCounter=self.logicAddresCounter+1
+           
+                        
 
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
                 #sleep(2)
@@ -89,8 +89,8 @@ class Random:
                         self.simulador.MMU.actualizar(siguiente.Ptr,False,elegido,None,"-","-")
                     else:
                         #Agregar la pagina a la mmu si no estaba en ram ni vram
-                        self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.logicAddresCounter,elegido,"-","-")
-                        self.logicAddresCounter=self.logicAddresCounter+1 
+                        self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter,elegido,"-","-")
+                     
 
                 #sleep(2)
 

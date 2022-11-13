@@ -21,8 +21,8 @@ class Simulador:
     self.ListaAccesosBarajados = []
     self.varasSinBarajar = []
     random.seed(self.seed)
-    self.RAM = Memoria()
-    self.VRAM = Memoria()
+    self.RAM = Memoria(100)
+    self.VRAM = Memoria(100)
     self.MMU = MMU()
     self.stats = Stats()
     self.crearBaraja()

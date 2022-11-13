@@ -113,15 +113,27 @@ class PaginaSimulador(tk.Frame):
         self.label_test.place(x=500, y=500)
 
         
-        self.t1 = threading.Thread(target=self.optimo)
-        self.t2 = threading.Thread(target=self.lru)
+        self.tOptimo = threading.Thread(target=self.optimo)
+        self.tAging = threading.Thread(target=self.aging)
+        self.tRandom = threading.Thread(target=self.random)
+        self.tLRU = threading.Thread(target=self.lru)
+        self.tSecondChance = threading.Thread(target=self.secondchance)
+
     # ESTA FUNCION ES PARA EDITAR TODOS LOS LABELS PARA QUE SE ACTUALICE LA GUI
     def draw(self):
         self.label_test['text'] = str(random.randint(0, 5))
         self.parent.after(500, self.draw)
     # ESTA FUNCION SIRVE TEMPORALMENTE PARA CORRER EL DRAW Y EL OPTIMO
     def correr_simulacion(self):
-        self.t1.start() # DONDE COLOCAR LOS JOINS?
+        self.tOptimo.start() # DONDE COLOCAR LOS JOINS?
+        if self.controller.algoritmo_escogido == "Aging":
+          self.tAging.start()
+        if self.controller.algoritmo_escogido == "LRU":
+          self.tLRU.start()
+        if self.controller.algoritmo_escogido == "SecondChance":
+          self.tSecondChance.start()
+        if self.controller.algoritmo_escogido == "Random":
+          self.tRandom.start()
         self.draw()
 
     def debugcito(self):

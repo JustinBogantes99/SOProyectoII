@@ -4,7 +4,8 @@ from .shared_imports import *
 from General.Simulador import Simulador
 import random
 import threading
-
+import numpy as np
+from tkinter import *
 class PaginaSimulador(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -27,41 +28,71 @@ class PaginaSimulador(tk.Frame):
         )
         txt_button.pack(side="bottom", fill=tk.X)
 
-        representarValores= [ " Page ID ","PID","LOADED","L-ADDR","M-ADDR","LOADED-T","Mark"]
-        frme_venta_optimo=tk.Frame(self, parent,width=400,height=300,bg="#FFE4B5")
-        frme_venta_optimo.place(x=20,y=100)
+        representarValores= [ " Page ID ","PID","LOADED","L-ADDR","M-ADDR","D-ADDR","LOADED-T","Mark"]
 
-        frme_venta_algoritmo=tk.Frame(self, parent,width=400,height=300,bg="blue")
-        frme_venta_algoritmo.place(x=750,y=100)
+        frme_venta_optimo=tk.Frame(self,width="400", height="300")
+        frme_venta_optimo.place(x=220,y=170)
+
+        my_canvas = tk.Canvas(frme_venta_optimo)
+        my_canvas.config(width=400,height=300,)
+        my_canvas.pack()
         
+        my_scrollbar = ttk.Scrollbar(frme_venta_optimo, orient=VERTICAL, command=my_canvas.yview)
+        my_scrollbar.pack(side=RIGHT, fill=Y)
+
+        # Configure The Canvas
+        my_canvas.configure(yscrollcommand=my_scrollbar.set)
+        my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion = my_canvas.bbox("all")))
+        
+        second_frame = Frame(my_canvas)
+        my_canvas.create_window((0,0), window=second_frame)
+
         labelsOpt=[]
         labelsAlgo=[]
+        
+        for j in range(len(representarValores)):#esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
+            labelsOpt+=[tk.Label(second_frame,text=representarValores[j],bd=4)]
 
-        for i in range(len(representarValores)):
-            labelsOpt+=[tk.Label(frme_venta_optimo,text=representarValores[i],bd=30,bg="#FFE4B5")]
+        for i in range(120):#esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
+            labelsOpt+=[tk.Label(second_frame,text=str(i),bd=4)]
         
-        fila=0
-        columna=0       
-        for x in labelsOpt:
-            x.grid(row=fila,column=columna) 
-            columna+=1
+        
 
-        for j in range(len(representarValores)):
-            labelsAlgo+=[tk.Label(frme_venta_algoritmo,text=representarValores[j],bd=30,bg="#FFE4B5")]
-        
-        fila=0
-        columna=0       
-        for y in labelsAlgo:
-            y.grid(row=fila,column=columna)
-            columna+=1
-      
+        MatrizLabelProcesoDatos=np.reshape(labelsOpt, (16, 8))#aca son 7 columnas con la cantidad de filas que seria los cantidad de procesos multiplicados por 8 /7
+        for x in range(len(MatrizLabelProcesoDatos)):
+            for y in range(len(MatrizLabelProcesoDatos[0])):
+                MatrizLabelProcesoDatos[x][y].grid(row=x, column=y)
 
-        scrollbarOptimo = tk.Scrollbar(frme_venta_optimo, orient=tk.VERTICAL, command=labelsOpt)
-        scrollbarOptimo.place(relx=1, rely=0, relheight=1, anchor=tk.NE)
-        
-        scrollbarAlgoritmo = tk.Scrollbar(frme_venta_algoritmo, orient=tk.VERTICAL, command=labelsAlgo)
-        scrollbarAlgoritmo.place(relx=1, rely=0, relheight=1, anchor=tk.NE)
-        
+        #segundo label
+        frme_venta_algoritmo=tk.Frame(self,width="400", height="300")
+        frme_venta_algoritmo.place(x=950,y=170)
+
+        my_canvasTable2 = tk.Canvas(frme_venta_algoritmo)
+        my_canvasTable2.config(width=400,height=300,)
+        my_canvasTable2.pack()
+
+        my_scrollbarTable2 = ttk.Scrollbar(frme_venta_algoritmo, orient=VERTICAL, command=my_canvasTable2.yview)
+        my_scrollbarTable2.pack(side=RIGHT, fill=Y)
+
+        # Configure The Canvas
+        my_canvasTable2.configure(yscrollcommand=my_scrollbarTable2.set)
+        my_canvasTable2.bind('<Configure>', lambda e: my_canvasTable2.configure(scrollregion = my_canvasTable2.bbox("all")))
+
+        Third_frame = Frame(my_canvasTable2)
+        my_canvasTable2.create_window((0,0), window=Third_frame)
+
+        for a in range(len(representarValores)):#esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
+            labelsAlgo+=[tk.Label(Third_frame,text=representarValores[a],bd=4)]
+
+        for i in range(120):#esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
+            labelsAlgo+=[tk.Label(Third_frame,text=str(i),bd=4)]
+
+        MatrizLabelProcesoDatosAlgoritmo= np.reshape(labelsAlgo, (16, 8))
+
+        for x in range(len(MatrizLabelProcesoDatosAlgoritmo)):
+            for y in range(len(MatrizLabelProcesoDatosAlgoritmo[0])):
+                MatrizLabelProcesoDatosAlgoritmo[x][y].grid(row=x, column=y)
+
         optimo_button = tk.Button(
             self,
             text="Correr optimo",

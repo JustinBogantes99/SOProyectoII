@@ -12,8 +12,7 @@ class Optimo:
 
     def hacerPaginasMarcadas(self):
         for acceso in self.simulador.varasSinBarajar: 
-            print("Caca")
-            self.paginasMarcadas.append([0,acceso])    
+            self.paginasMarcadas.append([0,acceso])
 
     #Calcula cuantos accesos a memoria faltan para que la paginas sea usada de nuevo
     def calcularAccesosfaltanttes(self):
@@ -46,7 +45,7 @@ class Optimo:
         self.simulador.stats.VRAMUtilizada = len(self.simulador.VRAM.contenido)*4
 
     def simular(self):
-        
+
         while(len(self.simulador.varasBarajadas)>1):
             if len(self.simulador.RAM.contenido) < self.RAMSize:
                 siguiente=self.simulador.varasBarajadas.pop(0)

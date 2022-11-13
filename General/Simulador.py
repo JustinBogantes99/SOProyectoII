@@ -15,11 +15,15 @@ class Simulador:
   def __init__(self, tipoSimulador, txt):
     self.txt = txt
     self.varasBarajadas = []
+    self.tipoSimulador = tipoSimulador
+    self.ListadeAccesos = []
+    self.ListaAccesosBarajados = []
     self.varasSinBarajar = []
     self.RAM = Memoria()
     self.VRAM = Memoria()
     self.MMU = MMU()
     self.stats = Stats()
+    self.barajar()
     if tipoSimulador == "LRU":
       self.algoritmo = LRU(self)
     if tipoSimulador == "Optimo":
@@ -31,10 +35,10 @@ class Simulador:
     if tipoSimulador == "Aging":
       self.algoritmo = Aging(self)
     
-    self.barajar()
+
 
   def barajar(self):
-    ListadeAccesos=[[1,1,500]
+    self.ListadeAccesos=[[1,1,500]
     ,[1,2,1024]
     ,[1,3,512]
     ,[2,4,256]
@@ -45,7 +49,7 @@ class Simulador:
     ,[3,9,512]
     ,[4,10,256]
 ]
-    ListaAccesosBarajados=[[1,1,500]
+    self.ListaAccesosBarajados=[[1,1,500]
     ,[3,6,128]
     ,[1,2,1024]
     ,[2,4,256]
@@ -62,20 +66,24 @@ class Simulador:
     ,[3,7,1024]
     ]
 
-    for pagina in ListadeAccesos:
+    for pagina in self.ListadeAccesos:
       nuevaPagina= Pagina()
       nuevaPagina.PID=pagina[0]
       nuevaPagina.Ptr=pagina[1]
       nuevaPagina.Size=pagina[2]
       nuevaPagina.Contador=0
+      if self.tipoSimulador == "SecondChance":
+        nuevaPagina.mark = False
       self.varasSinBarajar.append(nuevaPagina)
 
-    for pagina in ListaAccesosBarajados:
+    for pagina in self.ListaAccesosBarajados:
       nuevaPagina= Pagina()
       nuevaPagina.PID=pagina[0]
       nuevaPagina.Ptr=pagina[1]
       nuevaPagina.Size=pagina[2]
       nuevaPagina.Contador=0
+      if self.tipoSimulador == "SecondChance":
+        nuevaPagina.mark = False
       self.varasBarajadas.append(nuevaPagina)      
 
     print("baraje")

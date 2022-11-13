@@ -44,6 +44,7 @@ class SecondChance:
 
     def simular_real(self):
         while(len(self.simulador.varasBarajadas)>1):
+            first_in = 0
             siguiente = self.simulador.varasBarajadas.pop(0)
 
             # Si no se ha llenado la RAM
@@ -55,13 +56,9 @@ class SecondChance:
                     if self.simulador.VRAM.encontrar(siguiente.Ptr)==True:
                         self.simulador.VRAM.contenido.remove(siguiente)
                         self.simulador.RAM.contenido.append(siguiente)
-                        self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+5
-                        self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing+5
-                    if len(self.simulador.RAM.contenido)!=0:
-                        for pagina in self.simulador.RAM.contenido:
-                            pagina.Contador+=1
-
-                    siguiente.Contador+=1        
+                        self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 5
+                        self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing + 5
+      
                     self.simulador.RAM.contenido.append(siguiente)
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
@@ -84,6 +81,6 @@ class SecondChance:
                     # La página no se encontro en VRAM - Hay que crearla
                     else:
                         pass
-                # La página se encontró en RAM (Aplicar LRU al mark)
+                # La página se encontró en RAM (Aplicar Second Chance)
                 elif self.simulador.RAM.encontrar(siguiente.Ptr):
                     pass

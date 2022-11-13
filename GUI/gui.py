@@ -8,6 +8,8 @@ class Windows(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.fileContent = []
+        self.algoritmo_escogido = ""
+        self.seed = ""
 
         self.wm_title("Proyecto II: Sistemas Operativos")
         self.geometry("1500x720+280+0")

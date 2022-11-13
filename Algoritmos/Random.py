@@ -5,6 +5,7 @@ class Random:
         self.simulador = simulador
         self.RAMSize=6 
         self.logicAddresCounter=0
+        random.seed(self.simulador.seed)
         pass
     
     def calcularFragmentacionInternaOpt(self):

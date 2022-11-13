@@ -12,14 +12,15 @@ import random
 from Stats.Stats import Stats
 
 class Simulador:
-  def __init__(self, tipoSimulador, txt):
+  def __init__(self, tipoSimulador, txt, seed):
+    self.seed = seed
     self.txt = txt
     self.varasBarajadas = []
     self.tipoSimulador = tipoSimulador
     self.ListadeAccesos = []
     self.ListaAccesosBarajados = []
     self.varasSinBarajar = []
-    
+    random.seed(self.seed)
     self.RAM = Memoria()
     self.VRAM = Memoria()
     self.MMU = MMU()

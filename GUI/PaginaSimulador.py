@@ -49,8 +49,8 @@ class PaginaSimulador(tk.Frame):
         fila=0
         columna=0       
         for y in labelsAlgo:
-            y.grid(row=fila,column=columna) 
-            columna+=1    
+            y.grid(row=fila,column=columna)
+            columna+=1
       
 
         scrollbarOptimo = tk.Scrollbar(frme_venta_optimo, orient=tk.VERTICAL, command=labelsOpt)
@@ -96,10 +96,17 @@ class PaginaSimulador(tk.Frame):
 
         switch_window_button = tk.Button(
             self,
-            text="Debug",
+            text="Correr simulacion",
             command=self.correr_simulacion,
         )
         switch_window_button.pack(side="bottom", fill=tk.X)
+
+        debug_window_button = tk.Button(
+            self,
+            text="Debug",
+            command=self.debugcito,
+        )
+        debug_window_button.pack(side="bottom", fill=tk.X)
         test = str(random.randint(0, 5))
 
         self.label_test = tk.Label(self, text=test)
@@ -117,27 +124,31 @@ class PaginaSimulador(tk.Frame):
         self.t1.start() # DONDE COLOCAR LOS JOINS?
         self.draw()
 
+    def debugcito(self):
+        print(self.controller.seed)
+        print(self.controller.algoritmo_escogido)
+
     def test(self):
         print(self.controller.fileContent)
 
     def optimo(self):
-        self.simulador_optimo = Simulador("Optimo", self.controller.fileContent)
+        self.simulador_optimo = Simulador("Optimo", self.controller.fileContent, self.controller.seed)
         self.simulador_optimo.correr_algoritmo()
 
     def aging(self):
-        self.simulador_aging = Simulador("Aging", self.controller.fileContent)
+        self.simulador_aging = Simulador("Aging", self.controller.fileContent, self.controller.seed)
         self.simulador_aging.correr_algoritmo()
 
     def lru(self):
-        self.simulador_lru = Simulador("LRU", self.controller.fileContent)
+        self.simulador_lru = Simulador("LRU", self.controller.fileContent, self.controller.seed)
         self.simulador_lru.correr_algoritmo()
 
     def random(self):
-        self.simulador_random = Simulador("Random", self.controller.fileContent)
+        self.simulador_random = Simulador("Random", self.controller.fileContent, self.controller.seed)
         self.simulador_random.correr_algoritmo()
 
     def secondchance(self):
-        self.simulador_secondchance = Simulador("SecondChance", self.controller.fileContent)
+        self.simulador_secondchance = Simulador("SecondChance", self.controller.fileContent, self.controller.seed)
         self.simulador_secondchance.correr_algoritmo()
 
 class PaginaDebugger(tk.Frame):

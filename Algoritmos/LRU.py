@@ -56,18 +56,15 @@ class LRU:
             # Si no se ha llenado la RAM
             if len(self.simulador.RAM.contenido) < 5:#self.simulador.RAMSize
                 print("La RAM no está llena, metiendo un nuevo proceso")
+
                 if self.simulador.RAM.encontrar(siguiente.Ptr)==False:
                     if self.simulador.VRAM.encontrar(siguiente.Ptr)==True:
                         self.simulador.VRAM.contenido.remove(siguiente)
                         self.simulador.RAM.contenido.append(siguiente)
                         self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+5
                         self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing+5
-
-                    if len(self.simulador.RAM.contenido)!=0:
-                        for pagina in self.simulador.RAM.contenido:
-                            pagina.Contador+=1
                             
-                    siguiente.Contador+=1        
+                    siguiente.Contador = 0      
                     self.simulador.RAM.contenido.append(siguiente)
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
@@ -129,9 +126,9 @@ class LRU:
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
                 # Hago las paginas mas viejas
-                if len(self.simulador.RAM.contenido)!=0:
-                    for pagina in self.simulador.RAM.contenido:
-                        pagina.Contador+=1
+            if len(self.simulador.RAM.contenido)!=0:
+                for pagina in self.simulador.RAM.contenido:
+                    pagina.Contador+=1
 
         self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM.contenido)
         self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM.contenido)

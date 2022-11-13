@@ -4,6 +4,7 @@ class Random:
     def __init__(self, simulador):
         self.simulador = simulador
         self.logicAddresCounter=0
+        random.seed(self.simulador.seed)
         pass
     
 
@@ -33,7 +34,7 @@ class Random:
     # NO CAMBIAR EL NOMBRE
 
     def simular(self):
-        
+        print("CorriendoRandom")
         while(len(self.simulador.varasBarajadas)>1):
             siguiente=self.simulador.varasBarajadas.pop(0)
             

@@ -5,7 +5,8 @@ class Pagina:
         self.PID = None
         self.Ptr = None
         self.Size = None
-        self.Contador=None
+        self.Contador = None
+        self.mark = None
       
     def to_string(self):
         pprint(vars(self)) 

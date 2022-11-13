@@ -42,7 +42,7 @@ class LRU:
     # Esto se tiene que llamar simular
     def simular(self):
         print("Corriendo el print")
-
+        print(self.simulador.varasBarajadas)
         # Mientras haya algo por procesar
         while(len(self.simulador.varasBarajadas)>1):
             siguiente = self.simulador.varasBarajadas.pop(0)
@@ -152,3 +152,4 @@ class LRU:
         print("RAM utilizada: ", self.simulador.stats.RAMUtilizada)
         print("VRAM utilizada: ", self.simulador.stats.VRAMUtilizada)
         self.printMemorias()
+        print("\n\n\n")

@@ -9,6 +9,7 @@ class Memoria:
     def encontrar(self,ptr):
         for pagina in self.contenido:
             if pagina.Ptr==ptr:
+                print("lo encontre")
                 return True
         
         return False

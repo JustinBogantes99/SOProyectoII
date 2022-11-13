@@ -6,13 +6,39 @@ class Aging:
         self.vejezPaginas = []  #Corresponde al orden en el que las llamadas a las paginas se va realizando, L[0] = la más antigua.
         self.RAMSize = 6 # Pregunta, este valor de RAM no debería estar en la simulación?
 
+    def calcularFragmentacionInternaAging(self):
+        self.fragmentacionInternaAging = 0
 
-    def aging(self): #Considerar siempre que la competencia la hacen la vejez de las páginas, y que hay que cargar los procesos en RAM 
+        for pagina in self.simulador.RAM:
+            self.simulador.stats.FragmentacionInterna = self.simulador.stats.FragmentacionInterna + ((4000 - pagina.Size) / 1000)
+
+        return self.simulador.stats.FragmentacionInterna
+
+    def calcularRAMUtilizadayVRAM(self):
+        self.simulador.stats.RAMUtilizada = len(self.simulador.RAM.contenido) * 4
+        self.simulador.stats.VRAMUtilizada = len(self.simulador.VRAM.contenido) * 4
+
+    def printMemorias(self):
+        ram="RAM-["
+        vram="VRAM-["
+        for pagina in self.simulador.RAM.contenido:
+            ram=ram+str(pagina.Ptr)+","
+        
+        ram=ram+"]"
+        for pagina in self.simulador.VRAM.contenido:
+            vram=vram+str(pagina.Ptr)+","
+
+        vram=vram+"]"
+
+        print(ram)
+        print(vram)
+
+
+    def simular(self): #Considerar siempre que la competencia la hacen la vejez de las páginas, y que hay que cargar los procesos en RAM 
         
         while(len(self.simulador.varasBarajadas) > 1): #Que sigan habiendo páginas pendientes de llamado
 
             if len(self.simulador.RAM.contenido) < self.RAMSize: #Que haya memoria RAM disponible VERIFICAR
-                
                 siguiente = self.simulador.varasBarajadas.pop(0) #Toma el proceso en "ejecución" de la lista barajada
 
                 if siguiente not in self.simulador.RAM.contenido: #condición que indica que no se encuentra en memoria 
@@ -39,7 +65,6 @@ class Aging:
             for Pagina in self.simulador.RAM.contenido: #Recorre los procesos en RAM actuales para buscar el que cumpla con el id de página a eliminar.
 
                 if Pagina[1] == self.vejezPaginas[0]:
-
                     self.simulador.RAM.contenido.remove(Pagina) #Quita la pagina que por el algoritmo debe salir
                     self.simulador.RAM.contenido.append(siguiente) #Agrega la nueva página a utilizar
                 

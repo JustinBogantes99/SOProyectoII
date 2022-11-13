@@ -80,7 +80,7 @@ class LRU:
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
                 elif self.simulador.RAM.encontrar(siguiente.Ptr)==True:
-                    for pag in self.self.simulador.RAM.contenido:
+                    for pag in self.simulador.RAM.contenido:
                         if pag.Ptr == siguiente.Ptr:
                             pag.contador=0
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1

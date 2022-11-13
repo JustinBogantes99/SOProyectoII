@@ -3,12 +3,12 @@ from Algoritmos.LRU import LRU
 from Algoritmos.Optimo import Optimo
 from Algoritmos.Random import Random
 from Algoritmos.SecondChance import SecondChance
-
+import copy
 from .Memoria import Memoria
 from .MMU import MMU
 from .itemMMU import itemMMU
 from .Pagina import Pagina
-
+import random
 from Stats.Stats import Stats
 
 class Simulador:
@@ -19,11 +19,12 @@ class Simulador:
     self.ListadeAccesos = []
     self.ListaAccesosBarajados = []
     self.varasSinBarajar = []
+    
     self.RAM = Memoria()
     self.VRAM = Memoria()
     self.MMU = MMU()
     self.stats = Stats()
-    self.barajar()
+    self.crearBaraja()
     if tipoSimulador == "LRU":
       self.algoritmo = LRU(self)
     if tipoSimulador == "Optimo":
@@ -35,45 +36,32 @@ class Simulador:
     if tipoSimulador == "Aging":
       self.algoritmo = Aging(self)
     
-
-
-  def barajar(self):
-    self.ListadeAccesos=[[1,1,500]
-    ,[1,2,1024]
-    ,[1,3,512]
-    ,[2,4,256]
-    ,[2,5,512]
-    ,[3,6,128]
-    ,[3,7,1024]
-    ,[3,8,512]
-    ,[3,9,512]
-    ,[4,10,256]
-]
-    self.ListaAccesosBarajados=[[1,1,500]
-    ,[3,6,128]
-    ,[3,9,512]
-    ,[3,9,512]
-    ,[1,1,500]
-    ,[1,2,1024]
-    ,[2,4,256]
-    ,[2,4,256]
-    ,[1,2,1024]
-    ,[2,5,512]
-    ,[4,10,256]
-    ,[1,3,512]
-    ,[1,3,512]
-    ,[2,5,512]
-    ,[3,7,1024]
-    ,[4,10,256]
-    ,[4,10,256]
-    ,[3,8,512]
-    ,[1,1,500]
-    ,[2,5,512]
-    ,[3,8,512]
-    ,[3,9,512]
-    ,[3,7,1024]
-    ]
-
+  def correr_algoritmo(self):
+    self.algoritmo.simular()
+  
+  def leer_txt(self):
+    self.txt.pop(0)
+    lista=[]
+    for i in range(len(self.txt)):
+      lista+=[list(map(int, self.txt[i]))]
+    print("\n\n\n")
+    print("Lista enteros") 
+    print(lista)
+    self.ListadeAccesos=lista
+  
+  def crearBaraja(self):
+    self.leer_txt()
+    self.ListaAccesosBarajados= copy.deepcopy(self.ListadeAccesos)
+    for x in range(0,len(self.ListadeAccesos)-1):
+      ran= random.randint(0,len(self.ListadeAccesos)-1)
+      self.ListaAccesosBarajados.append(self.ListadeAccesos[ran])
+    random.shuffle(self.ListaAccesosBarajados)
+    print("\n\n\n")
+    print("Lista barajada")
+    print(self.ListaAccesosBarajados)
+    print("\n\n\n")
+    print("ACA SHOTAS ESTOY HP")
+    
     for pagina in self.ListadeAccesos:
       nuevaPagina= Pagina()
       nuevaPagina.PID=pagina[0]
@@ -97,12 +85,3 @@ class Simulador:
     print("baraje")
     print(len(self.varasBarajadas))
     pass
-
-  def correr_algoritmo(self):
-    self.algoritmo.simular()
-  
-  def leer_txt(self):
-    pass
-
- # def barajar(self):
-  #  pass

@@ -29,6 +29,7 @@ class Optimo:
     #Devuelve la cantidad de accesoss faltantes para utilizar la pagina ptr       
     def getFaltantes(self, ptr):
         for y in range( len(self.paginasMarcadas)):
+            print(self.paginasMarcadas[y])
             if self.paginasMarcadas[y][1].Ptr ==ptr:
                 return self.paginasMarcadas[y][0]
 
@@ -36,7 +37,7 @@ class Optimo:
 
     def calcularFragmentacionInternaOpt(self):
         self.FragmentacionInternaOpt=0
-        for pagina in self.simulador.RAM:
+        for pagina in self.simulador.RAM.contenido:
             self.simulador.stats.FragmentacionInterna = self.simulador.stats.FragmentacionInterna + ((4000-pagina.Size)/1000)
         return self.simulador.stats.FragmentacionInterna
 
@@ -45,46 +46,44 @@ class Optimo:
         self.simulador.stats.VRAMUtilizada = len(self.simulador.VRAM.contenido)*4
 
     def simular(self):
-
         while(len(self.simulador.varasBarajadas)>1):
+            siguiente=self.simulador.varasBarajadas.pop(0)
             if len(self.simulador.RAM.contenido) < self.RAMSize:
-                siguiente=self.simulador.varasBarajadas.pop(0)
                 if not self.simulador.RAM.encontrar(siguiente.Ptr):
+                    #self.simulador.VRAM.encontrar(siguiente.Ptr)==True  
+                    #no seria cambiar a esto?
                     if self.simulador.VRAM.contenido.count(siguiente)>0:
                         self.simulador.VRAM.contenido.remove(siguiente)
                         self.simulador.RAM.contenido.append(siguiente)
                         self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+5
                         self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing+5
-
+                    
                     self.simulador.RAM.contenido.append(siguiente)
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
-                
                 else:
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
+                #sleep(2)
 
-                sleep(2)
-
-            if len(self.simulador.RAM.contenido) >= self.RAMSize:
-                siguiente= self.simulador.varasBarajadas.pop(0)
+            else:
                 if not self.simulador.RAM.encontrar(siguiente.Ptr):
                     maxIndx=0 #index de la pagina mas tardada
                     max=0 #accesos faltantes
                     for x in range(len(self.simulador.RAM.contenido)):
-                        accessosfaltantes = self.getFaltantes(self.simulador.RAM[x][1])
+                        accessosfaltantes = self.getFaltantes(self.simulador.RAM.contenido[x].Ptr)#que paso aca? porque es un [1]
                         if accessosfaltantes > max:
                             max = accessosfaltantes
                             maxIndx = x
 
                     if self.simulador.VRAM.contenido.count(siguiente)>0:
                         self.simulador.VRAM.contenido.remove(siguiente)
-                    self.simulador.VRAM.contenido.append(self.simulador.RAM[maxIndx])
+                    self.simulador.VRAM.contenido.append(self.simulador.RAM.contenido[maxIndx])
                     self.simulador.RAM.contenido[maxIndx] = siguiente
                     self.simulador.stats.TiempoTrashing  = self.simulador.stats.TiempoTrashing  + 5
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 6
                 else:
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
 
-                sleep(2)
+                #sleep(2)
 
             self.calcularAccesosfaltanttes()
             self.calcularFragmentacionInternaOpt()

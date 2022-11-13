@@ -52,29 +52,34 @@ class Random:
                         self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing+5
                     #Actualizar MMU
                     if not siguiente.Ptr in self.simulador.MMU.listaDeCositas:
-                        self.simulador.MMU.agregar(siguiente.Ptr,"x",len(self.simulador.RAM.contenido)-1,"-","-","-")
+                        #self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,len(self.simulador.MMU.listaDeCositas))
+                        self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,len(self.simulador.RAM.contenido)-1)
                     self.simulador.RAM.contenido.append(siguiente)
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
-                sleep(2)
+                #sleep(2)
 
             if len(self.simulador.RAM.contenido) >= self.RAMSize:
                 elegido=random.randint(0,len(self.simulador.RAM.contenido)-1)
                 if self.simulador.RAM.encontrar(siguiente.Ptr):
-                    print("esta")
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
                 else:
                     if self.simulador.VRAM.encontrar(siguiente.Ptr):
-                        self.simulador.VRAM.contenido.remove(siguiente)
+                        for index, pagina in enumerate(self.simulador.VRAM.contenido):
+                            if pagina.Ptr == siguiente.Ptr:
+                                self.simulador.VRAM.contenido.pop(index)
 
                     self.simulador.VRAM.contenido.append(self.simulador.RAM.contenido[elegido])
-                    self.simulador.MMU.actualizar (self.simulador.RAM.contenido[elegido].Ptr,"-","-",len(self.simulador.VRAM.contenido)-1,"-","-")
+                    #self.simulador.MMU.actualizar(self.simulador.RAM.contenido[elegido].Ptr,False,None,len(self.simulador.RAM.contenido)-1,None,None)
+                    #self.simulador.MMU.actualizar (self.simulador.RAM.contenido[elegido].Ptr,"-","-",len(self.simulador.VRAM.contenido)-1,"-","-")
+                    self.simulador.MMU.actualizar(self.simulador.RAM.contenido[elegido].Ptr,False,None,len(self.simulador.RAM.contenido)-1,None,None)
                     self.simulador.RAM.contenido[elegido] = siguiente
                     self.simulador.stats.TiempoTrashing  = self.simulador.stats.TiempoTrashing  + 5
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 6
 
                     if  siguiente.Ptr in self.simulador.MMU.listaDeCositas:
-                        self.simulador.MMU.actualizar(siguiente.Ptr,"x",elegido,"-","-","-")
-                sleep(2)
+                        #self.simulador.MMU.actualizar(siguiente.Ptr,False,None,len(self.simulador.VRAM.contenido)-1,None,None)
+                        self.simulador.MMU.actualizar(siguiente.Ptr,False,None,elegido,"-","-","-")
+                #sleep(2)
 
             
             self.calcularFragmentacionInternaOpt()

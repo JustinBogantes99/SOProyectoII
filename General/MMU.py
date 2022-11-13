@@ -6,12 +6,12 @@ class MMU:
         # item : {pageid -> itemMMU}
 
     #llamar cuando entra por primera vez una pagina a memoria
-    def agregar(self,processID,pageID,LAddres):
-        item= itemMMU( pageID, processID,None,LAddres,None,None)#pageID unico ptr
-        if pageID in self.listaDeCositas:
+    def agregar(self,processID,ptr,LAddres):
+        item= itemMMU( ptr, processID,None,LAddres,None,None)#pageID unico ptr
+        if ptr in self.listaDeCositas:
             pass
         else:
-            self.listaDeCositas[pageID]=item
+            self.listaDeCositas[ptr]=item
 
     #se llama cuando se pagina una pagina, de RAM a VRAM o viceversa
     def actualizar(self, key, loaded, MAddres, DAddres,mark,time):

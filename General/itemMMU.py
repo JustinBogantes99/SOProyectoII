@@ -1,7 +1,7 @@
 from pprint import pprint
 class itemMMU:
     def __init__(self, pageID, processID, loaded, LAddres, MAddres, DAddres):
-        self.pageID = pageID
+        self.pageID = pageID#unico
         self.processID = processID
         self.loaded = loaded
         self.LAddres = LAddres

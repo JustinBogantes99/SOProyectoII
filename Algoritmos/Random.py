@@ -42,15 +42,9 @@ class Random:
         while(len(self.simulador.varasBarajadas)>1):
             siguiente=self.simulador.varasBarajadas.pop(0)
             if len(self.simulador.RAM.contenido) < self.RAMSize:
-                
                 if self.simulador.RAM.encontrar(siguiente.Ptr):
-                    print("esta")
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
-
-                
                 else:
-
-                    print("no esta")
                     if self.simulador.VRAM.contenido.count(siguiente)>0:
                         self.simulador.VRAM.contenido.remove(siguiente)
                         self.simulador.RAM.contenido.append(siguiente)
@@ -59,12 +53,8 @@ class Random:
                     #Actualizar MMU
                     if not siguiente.Ptr in self.simulador.MMU.listaDeCositas:
                         self.simulador.MMU.agregar(siguiente.Ptr,"x",len(self.simulador.RAM.contenido)-1,"-","-","-")
-
-
                     self.simulador.RAM.contenido.append(siguiente)
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
-                
-
                 sleep(2)
 
             if len(self.simulador.RAM.contenido) >= self.RAMSize:
@@ -72,28 +62,18 @@ class Random:
                 if self.simulador.RAM.encontrar(siguiente.Ptr):
                     print("esta")
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
-                    
-                    
-                
                 else:
                     if self.simulador.VRAM.encontrar(siguiente.Ptr):
                         self.simulador.VRAM.contenido.remove(siguiente)
+
                     self.simulador.VRAM.contenido.append(self.simulador.RAM.contenido[elegido])
-
                     self.simulador.MMU.actualizar (self.simulador.RAM.contenido[elegido].Ptr,"-","-",len(self.simulador.VRAM.contenido)-1,"-","-")
-
                     self.simulador.RAM.contenido[elegido] = siguiente
                     self.simulador.stats.TiempoTrashing  = self.simulador.stats.TiempoTrashing  + 5
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 6
 
                     if  siguiente.Ptr in self.simulador.MMU.listaDeCositas:
                         self.simulador.MMU.actualizar(siguiente.Ptr,"x",elegido,"-","-","-")
-
-
-            
-            
-
-
                 sleep(2)
 
             

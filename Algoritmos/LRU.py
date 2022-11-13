@@ -46,7 +46,7 @@ class LRU:
         # Mientras haya algo por procesar
         while(len(self.simulador.varasBarajadas)>1):
             siguiente = self.simulador.varasBarajadas.pop(0)
-            self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,len(self.simulador.MMU.listaDeCositas))
+            self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter, len(self.simulador.RAM.contenido)-1, siguiente.mark, siguiente.Contador)
             print("\n\n\n")
             print("---------------------")
             print("Iteración", len(self.simulador.varasBarajadas))

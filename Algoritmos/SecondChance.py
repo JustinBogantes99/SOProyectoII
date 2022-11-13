@@ -20,6 +20,7 @@ class SecondChance:
     def simular(self):
         while(len(self.simulador.varasBarajadas)>0):
             siguiente = self.simulador.varasBarajadas.pop(0)
+            self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter, len(self.simulador.RAM.contenido)-1, siguiente.mark, siguiente.Contador)
 
             print("\n\n\n")
             print("---------------------")

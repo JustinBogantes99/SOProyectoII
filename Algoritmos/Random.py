@@ -45,8 +45,10 @@ class Random:
                 if self.simulador.RAM.encontrar(siguiente.Ptr):
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
                 else:
-                    if self.simulador.VRAM.contenido.count(siguiente)>0:
-                        self.simulador.VRAM.contenido.remove(siguiente)
+                    if self.simulador.VRAM.encontrar(siguiente.Ptr):
+                        for index, pagina in enumerate(self.simulador.VRAM.contenido):
+                            if pagina.Ptr == siguiente.Ptr:
+                                self.simulador.VRAM.contenido.pop(index)
                         self.simulador.RAM.contenido.append(siguiente)
                         self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+5
                         self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing+5

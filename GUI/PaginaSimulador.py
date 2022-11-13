@@ -61,7 +61,7 @@ class PaginaSimulador(tk.Frame):
 
         aging_button = tk.Button(
             self,
-            text="Correr optimo",
+            text="Correr aging",
             command=self.aging,
         )
         aging_button.pack(side="bottom", fill=tk.X)

@@ -3,19 +3,14 @@ from time import sleep
 class Random:
     def __init__(self, simulador):
         self.simulador = simulador
-        self.RAMSize=6 
         self.logicAddresCounter=0
         pass
     
-    def calcularFragmentacionInternaOpt(self):
-        self.FragmentacionInternaOpt=0
-        for pagina in self.simulador.RAM.contenido:
-            self.simulador.stats.FragmentacionInterna = self.simulador.stats.FragmentacionInterna + ((4000-pagina.Size)/1000)
-        return self.simulador.stats.FragmentacionInterna
+
 
     def calcularRAMUtilizadaYVRAM(self):
-        self.simulador.stats.RAMUtilizada=len(self.simulador.RAM.contenido)*4
-        self.simulador.stats.VRAMUtilizada = len(self.simulador.VRAM.contenido)*4
+        self.simulador.stats.RAMUtilizada=len(self.simulador.RAM.contenido)*4000
+        self.simulador.stats.VRAMUtilizada = len(self.simulador.VRAM.contenido)*4000
     
     
     def printMemorias(self):
@@ -49,7 +44,7 @@ class Random:
             print("Actualmente la MMU tiene: \n\n")
             print(self.simulador.MMU.to_string())
  
-            if len(self.simulador.RAM.contenido) < self.RAMSize:
+            if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize:
                 if self.simulador.RAM.encontrar(siguiente.Ptr):
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
                 else:
@@ -63,7 +58,7 @@ class Random:
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
                 #sleep(2)
 
-            if len(self.simulador.RAM.contenido) >= self.RAMSize:
+            if len(self.simulador.RAM.contenido) >= self.simulador.RAM.RAMSize:
                 elegido=random.randint(0,len(self.simulador.RAM.contenido)-1)
                 if self.simulador.RAM.encontrar(siguiente.Ptr):
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
@@ -95,8 +90,12 @@ class Random:
                 #sleep(2)
 
             
-            self.calcularFragmentacionInternaOpt()
-            self.calcularRAMUtilizadaYVRAM()
+            
+            self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
+            memoriaUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()
+            self.simulador.stats.RAMUtilizada=memoriaUtilizada[0]
+            self.simulador.stats.VRAMUtilizada = memoriaUtilizada[1]
+            self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM.contenido)
             self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM.contenido)
            # print("Tiempo total: ",self.simulador.stats.TiempoSimulado)

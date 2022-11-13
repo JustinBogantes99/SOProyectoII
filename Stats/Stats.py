@@ -7,4 +7,4 @@ class Stats:
         self.VRAMUtilizada=0
         self.PaginasEnMemoria=0
         self.PaginasEnDisco=0
-        self.RAMTotal=400
+        

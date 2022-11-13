@@ -39,7 +39,7 @@ class SecondChance:
             print("\n\n\n")
 
             # Si no se ha llenado la RAM
-            if len(self.simulador.RAM.contenido) < 5: # self.simulador.RAMSize
+            if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize: # self.simulador.RAMSize
                 # La pagina no se encuentra en RAM
                 if self.simulador.RAM.encontrar(siguiente.Ptr)==False:
 
@@ -103,6 +103,16 @@ class SecondChance:
                             self.simulador.MMU.actualizar(temp.Ptr,True,len(self.simulador.RAM.contenido)-1,None,temp.mark,None)
 
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
+
+                        
+            self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
+            memoriaUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()
+            self.simulador.stats.RAMUtilizada=memoriaUtilizada[0]
+            self.simulador.stats.VRAMUtilizada = memoriaUtilizada[1]
+            self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
+            self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM.contenido)
+            self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM.contenido)
+
             print("TERMINE LA ITERACION")
         print("\n\n\n")
         print("RESULTADO FINAL DE LA SIMULACION")

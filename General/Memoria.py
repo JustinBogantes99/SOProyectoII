@@ -1,8 +1,10 @@
 from .Pagina import Pagina 
 
 class Memoria:
-    def __init__(self):
+    def __init__(self,RAMSIZE):
         self.contenido = []
+        self.RAMSize= RAMSIZE
+        self.FragmentacionInterna=0
         # item : Pagina
 
     
@@ -13,6 +15,27 @@ class Memoria:
                 return True
         
         return False
+
+    def calcularFragmentacionInterna(self):
+        self.FragmentacionInternaOpt=0
+        for pagina in self.contenido:
+            self.FragmentacionInterna = self.FragmentacionInterna + ((4000-pagina.Size))
+        return self.FragmentacionInterna
+
+    def calcularMemoriaUtilizada(self):
+        uRAM=len(self.contenido)*4000
+        uVRAM= len(self.contenido)*4000
+
+        return [uRAM,uVRAM]
+
+    def calcularProcentajeRAM(self):
+        
+        return len(self.contenido)
+
+    def calcularProcentajeRAM(self):
+        VRAMutilizda= len(self.contenido)
+
+        return (VRAMutilizda/self.RAMSize)*100
 
     def to_string(self):
         for cont in self.contenido:

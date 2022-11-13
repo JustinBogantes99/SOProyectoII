@@ -4,7 +4,6 @@ class Aging:
         
         self.simulador = simulador
         self.vejezPaginas = []  #Corresponde al orden en el que las llamadas a las paginas se va realizando, L[0] = la más antigua.
-        self.RAMSize = 6 # Pregunta, este valor de RAM no debería estar en la simulación?
 
     def calcularFragmentacionInternaAging(self):
         self.fragmentacionInternaAging = 0
@@ -38,7 +37,7 @@ class Aging:
         
         while(len(self.simulador.varasBarajadas) > 1): #Que sigan habiendo páginas pendientes de llamado
 
-            if len(self.simulador.RAM.contenido) < self.RAMSize: #Que haya memoria RAM disponible VERIFICAR
+            if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize: #Que haya memoria RAM disponible VERIFICAR
                 siguiente = self.simulador.varasBarajadas.pop(0) #Toma el proceso en "ejecución" de la lista barajada
 
                 if siguiente not in self.simulador.RAM.contenido: #condición que indica que no se encuentra en memoria 

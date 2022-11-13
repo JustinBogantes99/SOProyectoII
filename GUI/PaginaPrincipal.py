@@ -65,7 +65,7 @@ class PaginaPrincipal(tk.Frame):
     def open_popup(self):
         top= tk.Toplevel(self.parent)
         top.geometry('750x250')
-        top.title("Child Window")
+        top.title("Error")
         tk.Label(top, text= "Debe declarar un seed, un algoritmo y un archivo", font=('Mistral 18 bold')).place(x=150,y=80)
 
     def callback(self, item):

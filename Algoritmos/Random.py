@@ -39,7 +39,7 @@ class Random:
     # NO CAMBIAR EL NOMBRE
 
     def simular(self):
-        
+        print("CorriendoRandom")
         while(len(self.simulador.varasBarajadas)>1):
             siguiente=self.simulador.varasBarajadas.pop(0)
             

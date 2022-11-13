@@ -18,21 +18,10 @@ class SecondChance:
 
 
     def simular(self):
+        print("CorriendoSecondChance")
         while(len(self.simulador.varasBarajadas)>0):
             siguiente = self.simulador.varasBarajadas.pop(0)
             self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter, len(self.simulador.RAM.contenido)-1, siguiente.mark, siguiente.Contador)
-
-            print("\n\n\n")
-            print("---------------------")
-            print("Iteración", len(self.simulador.varasBarajadas))
-            print("Tomando la página PID", siguiente.PID, " Ptr", siguiente.Ptr)
-            print("Actualmente la RAM tiene: \n\n")
-            print(self.simulador.RAM.to_string())
-            print("Actualmente la VRAM tiene: \n\n")
-            print(self.simulador.VRAM.to_string())
-            print("Actualmente la MMU tiene: \n\n")
-            print(self.simulador.MMU.to_string())
-            print("\n\n\n")
 
             # Si no se ha llenado la RAM
             if len(self.simulador.RAM.contenido) < 5: # self.simulador.RAMSize
@@ -85,16 +74,4 @@ class SecondChance:
                             temp = self.simulador.RAM.contenido.pop(index)
                             self.simulador.RAM.contenido.append(temp)
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
-            print("TERMINE LA ITERACION")
-        print("\n\n\n")
-        print("RESULTADO FINAL DE LA SIMULACION")
-        print("---------------------")
-        print("Iteración", len(self.simulador.varasBarajadas))
-        print("Tomando la página PID", siguiente.PID, " Ptr", siguiente.Ptr)
-        print("Actualmente la RAM tiene: \n\n")
-        print(self.simulador.RAM.to_string())
-        print("Actualmente la VRAM tiene: \n\n")
-        print(self.simulador.VRAM.to_string())
-        print("Actualmente la MMU tiene: \n\n")
-        print(self.simulador.MMU.to_string())
-        print("\n\n\n")
+

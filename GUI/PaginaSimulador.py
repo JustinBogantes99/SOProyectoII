@@ -1,3 +1,5 @@
+import sys
+from time import sleep
 from .shared_imports import *
 from General.Simulador import Simulador
 import random
@@ -7,6 +9,7 @@ class PaginaSimulador(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.sim = None
         self.parent = parent
         self.simulador_optimo = None
         self.simulador_aging = None
@@ -122,19 +125,41 @@ class PaginaSimulador(tk.Frame):
     # ESTA FUNCION ES PARA EDITAR TODOS LOS LABELS PARA QUE SE ACTUALICE LA GUI
     def draw(self):
         self.label_test['text'] = str(random.randint(0, 5))
-        self.parent.after(500, self.draw)
+        self.sim = self.parent.after(500, self.draw)
     # ESTA FUNCION SIRVE TEMPORALMENTE PARA CORRER EL DRAW Y EL OPTIMO
     def correr_simulacion(self):
+        print("ALGORITMO", self.controller.algoritmo_escogido)
         self.tOptimo.start() # DONDE COLOCAR LOS JOINS?
         if self.controller.algoritmo_escogido == "Aging":
-          self.tAging.start()
+            self.tAging.start()
         if self.controller.algoritmo_escogido == "LRU":
-          self.tLRU.start()
-        if self.controller.algoritmo_escogido == "SecondChance":
-          self.tSecondChance.start()
+            self.tLRU.start()
+        if self.controller.algoritmo_escogido == "Second Chance":
+            self.tSecondChance.start()
         if self.controller.algoritmo_escogido == "Random":
-          self.tRandom.start()
+            self.tRandom.start()
         self.draw()
+        self.tOptimo.join()
+        if self.controller.algoritmo_escogido == "Aging":
+            self.tAging.join()
+        if self.controller.algoritmo_escogido == "LRU":
+            self.tLRU.join()
+        if self.controller.algoritmo_escogido == "Second Chance":
+            self.tSecondChance.join()
+        if self.controller.algoritmo_escogido == "Random":
+            self.tRandom.join()
+
+        self.open_popup()
+        sleep(10)
+
+        sys.exit()
+
+    def open_popup(self):
+        print("INTENTANDOOOO")
+        top= tk.Toplevel(self)
+        top.geometry('750x250')
+        top.title("Cerrando")
+        tk.Label(top, text= "La memoria se liberará en 10 segundos. Después se cerrara el programa.", font=('Mistral 18 bold')).place(x=150,y=80)
 
     def debugcito(self):
         print(self.controller.seed)

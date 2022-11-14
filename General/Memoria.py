@@ -1,17 +1,32 @@
 from .Pagina import Pagina 
+import uuid
+import random
 
 class Memoria:
-    def __init__(self,RAMSIZE):
+    def __init__(self,RAMSIZE, seed):
         self.contenido = []
+        self.direcciones_DAddres = {}
         self.RAMSize= RAMSIZE
         self.FragmentacionInterna=0
+        random.seed(seed)
         # item : Pagina
 
+    def random_uuid():
+        uuid = uuid.UUID(bytes=bytes(random.getrandbits(8) for _ in range(16)), version=4)
+        return str(uuid)[:4]
+
+    def sacar(self, pagina):
+        pass
+
+    def meter(self, pagina):
+        pass
+
+    def encontrar_direccion(self, ptr):
+        pass
     
     def encontrar(self,ptr):
         for pagina in self.contenido:
             if pagina.Ptr==ptr:
-                print("lo encontre")
                 return True
         
         return False

@@ -1,3 +1,5 @@
+import pprint
+from sre_parse import TYPE_FLAGS
 import sys
 from time import sleep
 from .shared_imports import *
@@ -6,23 +8,55 @@ import random
 import threading
 import numpy as np
 from tkinter import *
+import copy
 
 class PaginaSimulador(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        
+        label = tk.Label(self, text="Aqui va el simulador con las tablas")
+        label.pack(padx=10)
+
+        frame_memoria=tk.Frame(self, width=1400, height=200)
+        frame_memoria.place(x=25,y=30)
+
+        frame_opt=tk.Frame(self,  height=600, width=650)
+        frame_opt.place(x=25,y=220)
+
+        frame_algoritmo=tk.Frame(self, height=600, width=650)
+        frame_algoritmo.place(x=775,y=220)
+
+        frame_stats_opt=tk.Frame(self,height=150, width=650)
+        frame_stats_opt.place(x=25,y=850)
+
+        frame_stats=tk.Frame(self,height=150, width=650)
+        frame_stats.place(x=775,y=850)
+
+        self.canvas_memory = tk.Canvas(frame_memoria, bg="green", width=1400, height=175)
+        self.canvas_memory.pack()
+
+        self.canvas_mmu_opt = tk.Canvas(frame_opt, bg="blue", height=600, width=650)
+        self.canvas_mmu_opt.pack()
+
+        self.canvas_mmu = tk.Canvas(frame_algoritmo, bg="blue", height=600, width=650)
+        self.canvas_mmu.pack()
+
+        self.canvas_stats_opt = tk.Canvas(frame_stats_opt, bg="yellow", height=150, width=650)
+        self.canvas_stats_opt.pack()
+
+        self.canvas_stats = tk.Canvas(frame_stats, bg="yellow", height=150, width=650)
+        self.canvas_stats.pack()
+
+        self.label_test = tk.Label(self.canvas_stats_opt, text="Buenas")
+        self.label_test.place(x=10,y=10)
+
         self.controller = controller
+        self.tmp = []
         self.tamanio=(len(self.controller.fileContent)-1)+(len(self.controller.fileContent)*2)
         self.sim = None
         self.parent = parent
         self.simulador_optimo = None
-        self.simulador_aging = None
-        self.simulador_lru = None
-        self.simulador_random = None
-        self.simulador_secondchance = None
-        self.simulador_usuario = None
-
-        label = tk.Label(self, text="Aqui va el simulador con las tablas")
-        label.pack(padx=10, pady=10)
+        self.simulador = None
 
         switch_window_button = tk.Button(
             self,
@@ -36,76 +70,107 @@ class PaginaSimulador(tk.Frame):
         self.tLRU = threading.Thread(target=self.lru)
         self.tSecondChance = threading.Thread(target=self.secondchance)
 
+        self.opt = ttk.Treeview(self.canvas_mmu_opt, selectmode ='none')
+        sb = Scrollbar(self.canvas_mmu_opt, orient=VERTICAL)
+        sb.pack(side=RIGHT, fill=Y)
 
-    def crearLabels(self):
-        #lista con los valores que tiene que mostrar cada proceso 
-        representarValores= [ " Page ID ","PID","LOADED","L-ADDR","M-ADDR","D-ADDR","LOADED-T","Mark"]
-        frme_venta_optimo=tk.Frame(self,width="400", height="300")
-        frme_venta_optimo.place(x=220,y=170)
-        #canvas creado en el frame
-        my_canvas = tk.Canvas(frme_venta_optimo)
-        my_canvas.config(width=400,height=300,)
-        my_canvas.pack()
-        #scrollbar que ubicado en el canvas
-        my_scrollbar = ttk.Scrollbar(frme_venta_optimo, orient=VERTICAL, command=my_canvas.yview)
-        my_scrollbar.pack(side=RIGHT, fill=Y)
-        # Configure The Canvas
-        my_canvas.configure(yscrollcommand=my_scrollbar.set)
-        my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion = my_canvas.bbox("all")))
+        self.opt.config(yscrollcommand=sb.set)
+        sb.config(command=self.opt.yview)
 
-        second_frame = Frame(my_canvas)
-        my_canvas.create_window((0,0), window=second_frame)
-        labelsOpt=[]
-        labelsAlgo=[]
-        for j in range(len(representarValores)):#esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
-            labelsOpt+=[tk.Label(second_frame,text=representarValores[j],bd=4)]
-        for i in range(120):# self.tamanio*8 esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
-            print(i)
-            labelsOpt+=[tk.Label(second_frame,text=str(i),bd=4)]
-        #120/8=16
-        filasLabel=16#(self.tamanio*8)//8
-        MatrizLabelProcesoDatos=np.reshape(labelsOpt, (filasLabel, 8))#aca son 7 columnas con la cantidad de filas que seria los cantidad de procesos multiplicados por 8 /7
-        for x in range(len(MatrizLabelProcesoDatos)):
-            for y in range(len(MatrizLabelProcesoDatos[0])):
-                MatrizLabelProcesoDatos[x][y].grid(row=x, column=y)
+        self.alg = ttk.Treeview(self.canvas_mmu, selectmode ='none')
 
-        #segundo label
-        frme_venta_algoritmo=tk.Frame(self,width="400", height="300")
-        frme_venta_algoritmo.place(x=950,y=170)
+        sb = Scrollbar(self.canvas_mmu, orient=VERTICAL)
+        sb.pack(side=RIGHT, fill=Y)
 
-        my_canvasTable2 = tk.Canvas(frme_venta_algoritmo)
-        my_canvasTable2.config(width=400,height=300,)
-        my_canvasTable2.pack()
+        self.alg.config(yscrollcommand=sb.set)
+        sb.config(command=self.alg.yview)
 
-        my_scrollbarTable2 = ttk.Scrollbar(frme_venta_algoritmo, orient=VERTICAL, command=my_canvasTable2.yview)
-        my_scrollbarTable2.pack(side=RIGHT, fill=Y)
+        self.opt['columns'] = ("Ptr", "PID", "LOADED", "L-ADDR", "M-ADDR", "D-ADDR", "LOADED-T", "Mark")
+        self.alg['columns'] = ("Ptr", "PID", "LOADED", "L-ADDR", "M-ADDR", "D-ADDR", "LOADED-T", "Mark")
 
-        # Configure The Canvas
-        my_canvasTable2.configure(yscrollcommand=my_scrollbarTable2.set)
-        my_canvasTable2.bind('<Configure>', lambda e: my_canvasTable2.configure(scrollregion = my_canvasTable2.bbox("all")))
+        self.opt.column("#0", width=0)
+        self.opt.column("Ptr", anchor=CENTER, width=80)
+        self.opt.column("PID", anchor=CENTER, width=80)
+        self.opt.column("LOADED", anchor=CENTER, width=80)
+        self.opt.column("L-ADDR", anchor=CENTER, width=80)
+        self.opt.column("M-ADDR", anchor=CENTER, width=80)
+        self.opt.column("D-ADDR", anchor=CENTER, width=80)
+        self.opt.column("LOADED-T", anchor=CENTER, width=80)
+        self.opt.column("Mark", anchor=CENTER, width=80)
 
-        Third_frame = Frame(my_canvasTable2)
-        my_canvasTable2.create_window((0,0), window=Third_frame)
+        self.opt.heading("#0",text='')
+        self.opt.heading("Ptr", text="Ptr", anchor=CENTER)
+        self.opt.heading("PID", text="PID", anchor=CENTER)
+        self.opt.heading("LOADED", text="LOADED", anchor=CENTER)
+        self.opt.heading("L-ADDR", text="L-ADDR", anchor=CENTER)
+        self.opt.heading("M-ADDR", text="M-ADDR", anchor=CENTER)
+        self.opt.heading("D-ADDR", text="D-ADDR", anchor=CENTER)
+        self.opt.heading("LOADED-T", text="LOADED-T", anchor=CENTER)
+        self.opt.heading("Mark", text="Mark", anchor=CENTER)
+        self.opt.pack()
 
-        for a in range(len(representarValores)): 
-            labelsAlgo+=[tk.Label(Third_frame,text=representarValores[a],bd=4)]
+        self.alg.column("#0", width=0)
+        self.alg.column("Ptr", anchor=CENTER, width=80)
+        self.alg.column("PID", anchor=CENTER, width=80)
+        self.alg.column("LOADED", anchor=CENTER, width=80)
+        self.alg.column("L-ADDR", anchor=CENTER, width=80)
+        self.alg.column("M-ADDR", anchor=CENTER, width=80)
+        self.alg.column("D-ADDR", anchor=CENTER, width=80)
+        self.alg.column("LOADED-T", anchor=CENTER, width=80)
+        self.alg.column("Mark", anchor=CENTER, width=80)
 
-        #print(txt)
-        for i in range(self.tamanio*8):#esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
-            labelsAlgo+=[tk.Label(Third_frame,text=str(i),bd=4)]
+        self.alg.heading("#0",text='')
+        self.alg.heading("Ptr", text="Ptr", anchor=CENTER)
+        self.alg.heading("PID", text="PID", anchor=CENTER)
+        self.alg.heading("LOADED", text="LOADED", anchor=CENTER)
+        self.alg.heading("L-ADDR", text="L-ADDR", anchor=CENTER)
+        self.alg.heading("M-ADDR", text="M-ADDR", anchor=CENTER)
+        self.alg.heading("D-ADDR", text="D-ADDR", anchor=CENTER)
+        self.alg.heading("LOADED-T", text="LOADED-T", anchor=CENTER)
+        self.alg.heading("Mark", text="Mark", anchor=CENTER)
+        self.alg.pack()
+        self.draw()
 
-        MatrizLabelProcesoDatosAlgoritmo= np.reshape(labelsAlgo, (filasLabel, 8))
 
-        for x in range(len(MatrizLabelProcesoDatosAlgoritmo)):
-            for y in range(len(MatrizLabelProcesoDatosAlgoritmo[0])):
-                MatrizLabelProcesoDatosAlgoritmo[x][y].grid(row=x, column=y)
-    # ESTA FUNCION ES PARA EDITAR TODOS LOS LABELS PARA QUE SE ACTUALICE LA GUI
+
     def draw(self):
+        self.label_test.config(text = str(random.randint(0,5)))
+        for item in self.opt.get_children():
+            self.opt.delete(item)
+        for item in self.alg.get_children():
+            self.alg.delete(item)
+
+        if not self.simulador_optimo == None:
+            for item in self.simulador_optimo.MMU.listaDeCositas.items():
+                item = item[1]
+                self.opt.insert('', 'end', values=(item.pageID, 
+                                                    item.processID, 
+                                                    item.loaded, 
+                                                    item.LAddres, 
+                                                    item.MAddres, 
+                                                    item.DAddres, 
+                                                    item.time, 
+                                                    item.mark ))
+        if not self.simulador == None:
+            for item in self.simulador.MMU.listaDeCositas.items():
+                item = item[1]
+                self.alg.insert('', 'end', values=(item.pageID, 
+                                                    item.processID, 
+                                                    item.loaded, 
+                                                    item.LAddres, 
+                                                    item.MAddres, 
+                                                    item.DAddres, 
+                                                    item.time, 
+                                                    item.mark ))
+        
+
         self.sim = self.parent.after(500, self.draw)
-    # ESTA FUNCION SIRVE TEMPORALMENTE PARA CORRER EL DRAW Y EL OPTIMO
+
     def correr_simulacion(self):
-        print("ALGORITMO", self.controller.algoritmo_escogido)
-        self.tOptimo.start() # DONDE COLOCAR LOS JOINS?
+        print("AYUDAME JESUS")
+        print(self.controller.fileContent)
+        self.tmp = copy.deepcopy(self.controller.fileContent)
+        self.tOptimo.start()
         if self.controller.algoritmo_escogido == "Aging":
             self.tAging.start()
         if self.controller.algoritmo_escogido == "LRU":
@@ -114,63 +179,25 @@ class PaginaSimulador(tk.Frame):
             self.tSecondChance.start()
         if self.controller.algoritmo_escogido == "Random":
             self.tRandom.start()
-        #self.crearLabels()
-        self.draw()
-        self.tOptimo.join()
-        if self.controller.algoritmo_escogido == "Aging":
-            self.tAging.join()
-        if self.controller.algoritmo_escogido == "LRU":
-            self.tLRU.join()
-        if self.controller.algoritmo_escogido == "Second Chance":
-            self.tSecondChance.join()
-        if self.controller.algoritmo_escogido == "Random":
-            self.tRandom.join()
 
-        self.open_popup()
-        sleep(10)
-
-        sys.exit()
-
-    def open_popup(self):
-        print("INTENTANDOOOO")
-        top= tk.Toplevel(self)
-        top.geometry('750x250')
-        top.title("Cerrando")
-        tk.Label(top, text= "La memoria se liberará en 10 segundos. Después se cerrara el programa.", font=('Mistral 18 bold')).place(x=150,y=80)
-
-    def debugcito(self):
-        print(self.controller.seed)
-        print(self.controller.algoritmo_escogido)
-
-    def test(self):
-        print(self.controller.fileContent)
 
     def optimo(self):
         self.simulador_optimo = Simulador("Optimo", self.controller.fileContent, self.controller.seed)
         self.simulador_optimo.correr_algoritmo()
 
     def aging(self):
-        self.simulador_aging = Simulador("Aging", self.controller.fileContent, self.controller.seed)
-        self.simulador_aging.correr_algoritmo()
+        self.simulador = Simulador("Aging", self.tmp, self.controller.seed)
+        self.simulador.correr_algoritmo()
 
     def lru(self):
-        self.simulador_lru = Simulador("LRU", self.controller.fileContent, self.controller.seed)
-        self.simulador_lru.correr_algoritmo()
+        self.simulador = Simulador("LRU", self.tmp, self.controller.seed)
+        self.simulador.correr_algoritmo()
 
     def random(self):
-        self.simulador_random = Simulador("Random", self.controller.fileContent, self.controller.seed)
-        self.simulador_random.correr_algoritmo()
+        self.simulador = Simulador("Random", self.tmp, self.controller.seed)
+        self.simulador.correr_algoritmo()
 
     def secondchance(self):
-        self.simulador_secondchance = Simulador("SecondChance", self.controller.fileContent, self.controller.seed)
-        self.simulador_secondchance.correr_algoritmo()
+        self.simulador = Simulador("SecondChance", self.tmp, self.controller.seed)
+        self.simulador.correr_algoritmo()
 
-class PaginaDebugger(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Para utilizar proximamente para ver prints del proceso")
-        label.pack(padx=10, pady=10)
-        switch_window_button = ttk.Button(
-            self, text="De vuelta al simulador", command=lambda: controller.show_frame(PaginaSimulador)
-        )
-        switch_window_button.pack(side="bottom", fill=tk.X)

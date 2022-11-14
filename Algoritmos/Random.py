@@ -36,6 +36,7 @@ class Random:
     def simular(self):
         print("CorriendoRandom")
         while(len(self.simulador.varasBarajadas)>1):
+            sleep(1)
             siguiente=self.simulador.varasBarajadas.pop(0)
             
             print("Actualmente la RAM tiene: \n\n")
@@ -70,19 +71,19 @@ class Random:
                                 self.simulador.VRAM.contenido.pop(index)
 
                     self.simulador.VRAM.contenido.append(self.simulador.RAM.contenido[elegido])
-                    #self.simulador.MMU.actualizar(self.simulador.RAM.contenido[elegido].Ptr,False,None,len(self.simulador.RAM.contenido)-1,None,None)
+                    #self.simulador.MMU.actualizar(self.simulador.RAM.contenido[elegido].Ptr,False,"-",len(self.simulador.RAM.contenido)-1,"-","-")
                     #self.simulador.MMU.actualizar (self.simulador.RAM.contenido[elegido].Ptr,"-","-",len(self.simulador.VRAM.contenido)-1,"-","-")
 
                     #actualizar la pagina que va a la VRAM
-                    self.simulador.MMU.actualizar(self.simulador.RAM.contenido[elegido].Ptr,False,None,len(self.simulador.VRAM.contenido)-1,None,None)
+                    self.simulador.MMU.actualizar(self.simulador.RAM.contenido[elegido].Ptr,False,"-",len(self.simulador.VRAM.contenido)-1,"-","-")
 
                     self.simulador.RAM.contenido[elegido] = siguiente
                     self.simulador.stats.TiempoTrashing  = self.simulador.stats.TiempoTrashing  + 5
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 6
                     #actualizar pagina que pasa de la VRAM a la RAM
                     if  siguiente.Ptr in self.simulador.MMU.listaDeCositas:
-                        #self.simulador.MMU.actualizar(siguiente.Ptr,False,None,len(self.simulador.VRAM.contenido)-1,None,None)
-                        self.simulador.MMU.actualizar(siguiente.Ptr,False,elegido,None,"-","-")
+                        #self.simulador.MMU.actualizar(siguiente.Ptr,False,"-",len(self.simulador.VRAM.contenido)-1,"-","-")
+                        self.simulador.MMU.actualizar(siguiente.Ptr,False,elegido,"-","-","-")
                     else:
                         #Agregar la pagina a la mmu si no estaba en ram ni vram
                         self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter,elegido,"-","-")

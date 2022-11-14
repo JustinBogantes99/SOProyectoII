@@ -2,7 +2,6 @@ from .shared_imports import *
 
 from .PaginaPrincipal import PaginaPrincipal
 from .PaginaSimulador import PaginaSimulador
-from .PaginaSimulador import PaginaDebugger
 
 class Windows(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -12,7 +11,7 @@ class Windows(tk.Tk):
         self.seed = ""
 
         self.wm_title("Proyecto II: Sistemas Operativos")
-        self.geometry("1500x720+280+0")
+        self.geometry("1600x1080+280+0")
 
         container = tk.Frame(self, height=300, width=300)
         container.pack(side="top", fill="both", expand=True)
@@ -21,7 +20,7 @@ class Windows(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (PaginaPrincipal, PaginaSimulador, PaginaDebugger):
+        for F in (PaginaPrincipal, PaginaSimulador):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")

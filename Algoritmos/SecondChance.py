@@ -1,3 +1,6 @@
+from time import sleep
+
+
 class SecondChance:
     def __init__(self, simulador):
         self.simulador = simulador
@@ -10,12 +13,12 @@ class SecondChance:
             if candidate.mark == True:
                 candidate.mark = False
                 self.simulador.RAM.contenido.append(candidate)
-                self.simulador.MMU.actualizar(candidate.Ptr,True,len(self.simulador.RAM.contenido)-1,None,candidate.mark,None) #actualizar candidate en mmu
+                self.simulador.MMU.actualizar(candidate.Ptr,True,len(self.simulador.RAM.contenido)-1,"-",candidate.mark,"-") #actualizar candidate en mmu
             else:
                 self.simulador.VRAM.contenido.append(candidate)
-                self.simulador.MMU.actualizar(candidate.Ptr,False,None,len(self.simulador.VRAM.contenido)-1,candidate.mark,None) #actualizar candidate en mmu
+                self.simulador.MMU.actualizar(candidate.Ptr,False,"-",len(self.simulador.VRAM.contenido)-1,candidate.mark,"-") #actualizar candidate en mmu
                 self.simulador.RAM.contenido.append(pagina_a_ram)
-                self.simulador.MMU.actualizar(pagina_a_ram.Ptr,True,len(self.simulador.RAM.contenido)-1,None,pagina_a_ram.mark,None) #actualizar pagina_a_ram en mmu
+                self.simulador.MMU.actualizar(pagina_a_ram.Ptr,True,len(self.simulador.RAM.contenido)-1,"-",pagina_a_ram.mark,"-") #actualizar pagina_a_ram en mmu
                 
                 paging_not_done = False
                 break
@@ -24,11 +27,12 @@ class SecondChance:
     def simular(self):
         print("CorriendoSecondChance")
         while(len(self.simulador.varasBarajadas)>0):
+            sleep(1)
             siguiente = self.simulador.varasBarajadas.pop(0)
             
 
             # Si no se ha llenado la RAM
-            if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize: # self.simulador.RAMSize
+            if len(self.simulador.RAM.contenido) < 5: # self.simulador.RAMSize
                 # La pagina no se encuentra en RAM
                 if self.simulador.RAM.encontrar(siguiente.Ptr)==False:
 
@@ -41,6 +45,8 @@ class SecondChance:
                         self.paging_bueno(pagina_a_ram)
 
                     # La pagina no esta en VRAM - Metiendo a la RAM directamente
+                    print("VOY A AGREGAR")
+                    print(siguiente.Ptr, siguiente.PID)
                     self.simulador.RAM.contenido.append(siguiente)
                     self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter, len(self.simulador.RAM.contenido)-1, siguiente.mark, siguiente.Contador)
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
@@ -51,12 +57,12 @@ class SecondChance:
                         if pagina.Ptr == siguiente.Ptr:
                             pagina.mark=True
 
-                            self.simulador.MMU.actualizarAMarcadoYTiempo(pagina.Ptr,pagina.mark,None)
+                            self.simulador.MMU.actualizarAMarcadoYTiempo(pagina.Ptr,pagina.mark,"-")
 
                             temp = self.simulador.RAM.contenido.pop(index)
                             self.simulador.RAM.contenido.append(temp)
 
-                            self.simulador.MMU.actualizar(temp.Ptr,True,len(self.simulador.RAM.contenido)-1,None,temp.mark,None)
+                            self.simulador.MMU.actualizar(temp.Ptr,True,len(self.simulador.RAM.contenido)-1,"-",temp.mark,"-")
 
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
@@ -75,7 +81,7 @@ class SecondChance:
 
                     # La página no se encontro en VRAM - Hay que crearla y hacer paging
                     else:
-                        self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter,None, siguiente.mark, siguiente.Contador)
+                        self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter,"-", siguiente.mark, siguiente.Contador)
                         self.paging_bueno(siguiente) 
 
                 # La página se encontró en RAM (Aplicar Second Chance)
@@ -84,12 +90,12 @@ class SecondChance:
                         if pagina.Ptr == siguiente.Ptr:
                             pagina.mark=True
 
-                            self.simulador.MMU.actualizarAMarcadoYTiempo(pagina.Ptr,pagina.mark,None)
+                            self.simulador.MMU.actualizarAMarcadoYTiempo(pagina.Ptr,pagina.mark,"-")
 
                             temp = self.simulador.RAM.contenido.pop(index)
                             self.simulador.RAM.contenido.append(temp)
 
-                            self.simulador.MMU.actualizar(temp.Ptr,True,len(self.simulador.RAM.contenido)-1,None,temp.mark,None)
+                            self.simulador.MMU.actualizar(temp.Ptr,True,len(self.simulador.RAM.contenido)-1,"-",temp.mark,"-")
 
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
@@ -102,8 +108,6 @@ class SecondChance:
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM.contenido)
             self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM.contenido)
-
-            print("TERMINE LA ITERACION")
         print("\n\n\n")
         print("RESULTADO FINAL DE LA SIMULACION")
         print("---------------------")

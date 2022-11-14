@@ -20,9 +20,11 @@ class Simulador:
     self.ListadeAccesos = []
     self.ListaAccesosBarajados = []
     self.varasSinBarajar = []
+    print("ESTE ES EL SEED")
+    print(seed)
     random.seed(self.seed)
-    self.RAM = Memoria(100)
-    self.VRAM = Memoria(100)
+    self.RAM = Memoria(100, self.seed)
+    self.VRAM = Memoria(100, self.seed)
     self.MMU = MMU()
     self.stats = Stats()
     self.crearBaraja()
@@ -76,10 +78,6 @@ class Simulador:
       ran= random.randint(0,len(self.ListadeAccesos)-1)
       self.ListaAccesosBarajados.append(self.ListadeAccesos[ran])
     random.shuffle(self.ListaAccesosBarajados)
-    print("\n\n\n")
-    print("Lista barajada")
-    print(self.ListaAccesosBarajados)
-    print("\n\n\n")
     for pagina in self.ListadeAccesos:
       nuevaPagina= Pagina()
       nuevaPagina.PID=pagina[0]
@@ -98,8 +96,4 @@ class Simulador:
       nuevaPagina.Contador=0
       if self.tipoSimulador == "SecondChance":
         nuevaPagina.mark = False
-      self.varasBarajadas.append(nuevaPagina)      
-
-    print("baraje")
-    print(len(self.varasBarajadas))
-    pass
+      self.varasBarajadas.append(nuevaPagina)

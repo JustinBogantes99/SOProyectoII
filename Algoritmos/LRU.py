@@ -44,6 +44,7 @@ class LRU:
         print(self.simulador.varasBarajadas)
         # Mientras haya algo por procesar
         while(len(self.simulador.varasBarajadas)>0):
+            sleep(1)
             siguiente = self.simulador.varasBarajadas.pop(0)
             
             print("\n\n\n")
@@ -67,17 +68,17 @@ class LRU:
                         for index, pagina in enumerate(self.simulador.VRAM.contenido):
                             if pagina.Ptr == siguiente.Ptr:
                                 self.simulador.VRAM.contenido.pop(index)
-                                #self.simulador.MMU.actualizar(siguiente.Ptr,False,None,None,None,None)
+                                #self.simulador.MMU.actualizar(siguiente.Ptr,False,"-","-","-","-")
                         
                         self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter, len(self.simulador.RAM.contenido)-1, siguiente.mark, siguiente.Contador)
-                        #self.simulador.MMU.actualizar(siguiente.Ptr,True,len(self.simulador.RAM.contenido)-1,None,None,siguiente.Contador,None)
+                        #self.simulador.MMU.actualizar(siguiente.Ptr,True,len(self.simulador.RAM.contenido)-1,"-","-",siguiente.Contador,"-")
                         self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+5
                         self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing+5
 
                     siguiente.Contador = 0      
                     self.simulador.RAM.contenido.append(siguiente)#key, loaded, MAddres, DAddres,mark,time
                     self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter, len(self.simulador.RAM.contenido)-1, siguiente.mark, siguiente.Contador)
-                    #self.simulador.MMU.actualizar(siguiente.Ptr,True,len(self.simulador.RAM.contenido)-1,None,siguiente.Contador,None)
+                    #self.simulador.MMU.actualizar(siguiente.Ptr,True,len(self.simulador.RAM.contenido)-1,"-",siguiente.Contador,"-")
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
                 elif self.simulador.RAM.encontrar(siguiente.Ptr)==True:
@@ -98,16 +99,15 @@ class LRU:
                     # Si la página se encuentra en VRAM
                     if self.simulador.VRAM.encontrar(siguiente.Ptr)==True:
                         print("Encontré la página en VRAM")
-                        # self.simulador.VRAM.contenido.remove(siguiente)
                         Paginamayor=self.sacarMayorLRU()
                         cont = 0
                         for pagina in self.simulador.RAM.contenido:
                             if pagina.Ptr==Paginamayor.Ptr:
                                 siguiente.Contador = 0
                                 self.simulador.VRAM.contenido.append(pagina)#key, loaded, MAddres, DAddres,mark,time
-                                self.simulador.MMU.actualizar(self.simulador.RAM.contenido[cont].Ptr,False,None,len(self.simulador.VRAM.contenido)-1,None,None)
+                                self.simulador.MMU.actualizar(self.simulador.RAM.contenido[cont].Ptr,False,"-",len(self.simulador.VRAM.contenido)-1,"-","-")
                                 self.simulador.RAM.contenido[cont]=siguiente
-                                self.simulador.MMU.actualizar(siguiente.Ptr,True,cont,None,siguiente.Contador,None)
+                                self.simulador.MMU.actualizar(siguiente.Ptr,True,cont,"-",siguiente.Contador,"-")
                                 pagina.Contador = 0
                                 
                                 
@@ -129,7 +129,7 @@ class LRU:
                             if pagina.Ptr==Paginamayor.Ptr:
                                 siguiente.Contador = 0
                                 self.simulador.VRAM.contenido.append(pagina)
-                                self.simulador.MMU.actualizar(self.simulador.RAM.contenido[cont].Ptr,False,None,len(self.simulador.VRAM.contenido)-1,None,None)
+                                self.simulador.MMU.actualizar(self.simulador.RAM.contenido[cont].Ptr,False,"-",len(self.simulador.VRAM.contenido)-1,"-","-")
                                 self.simulador.RAM.contenido[cont]=siguiente
                                 self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter, cont, siguiente.mark, siguiente.Contador)
                                 pagina.Contador = 0
@@ -144,14 +144,14 @@ class LRU:
                     for pag in self.simulador.RAM.contenido:
                         if pag.Ptr==siguiente.Ptr:
                             pag.Contador=0
-                            self.simulador.MMU.actualizarAMarcadoYTiempo(pag.Ptr,pag.Contador,None)
+                            self.simulador.MMU.actualizarAMarcadoYTiempo(pag.Ptr,pag.Contador,"-")
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
             # Hago las paginas mas viejas
             if len(self.simulador.RAM.contenido)!=0:
                 for pagina in self.simulador.RAM.contenido:
                     pagina.Contador+=1
-                    self.simulador.MMU.actualizarAMarcadoYTiempo(pagina.Ptr,pagina.Contador,None)
+                    self.simulador.MMU.actualizarAMarcadoYTiempo(pagina.Ptr,pagina.Contador,"-")
 
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             memoriaUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()

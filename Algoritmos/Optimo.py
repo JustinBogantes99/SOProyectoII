@@ -38,6 +38,7 @@ class Optimo:
 
         print("CorriendoOptimo")
         while(len(self.simulador.varasBarajadas)>0):
+            sleep(1)
             siguiente=self.simulador.varasBarajadas.pop(0)
 
             '''print("\n\n\n")
@@ -56,7 +57,7 @@ class Optimo:
 
 
             # La RAM todavía no está llena
-            if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize:
+            if len(self.simulador.RAM.contenido) < 5:
 
                 # No se pudo encontrar la página en la RAM
                 if not self.simulador.RAM.encontrar(siguiente.Ptr):
@@ -76,6 +77,8 @@ class Optimo:
                         self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing+5
 
                     # La pagina no esta en RAM, hay que agregarla sin paging
+                    print("VOY A AGREGAR")
+                    print(siguiente.Ptr, siguiente.PID)
                     self.simulador.RAM.contenido.append(siguiente)
                     self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter,len(self.simulador.RAM.contenido)-1,"-","-")
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
@@ -112,15 +115,15 @@ class Optimo:
                     self.simulador.VRAM.contenido.append(self.simulador.RAM.contenido[maxIndx])
 
                     #actualizar valor en MMU de la pagina enviada a VRAM
-                    self.simulador.MMU.actualizar(self.simulador.RAM.contenido[maxIndx].Ptr,False,None,len(self.simulador.VRAM.contenido)-1,None,None)
+                    self.simulador.MMU.actualizar(self.simulador.RAM.contenido[maxIndx].Ptr,False,"-",len(self.simulador.VRAM.contenido)-1,"-","-")
 
                     self.simulador.RAM.contenido[maxIndx] = siguiente
                     self.simulador.stats.TiempoTrashing  = self.simulador.stats.TiempoTrashing  + 5
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 6
 
                     if  siguiente.Ptr in self.simulador.MMU.listaDeCositas:
-                        #self.simulador.MMU.actualizar(siguiente.Ptr,False,None,len(self.simulador.VRAM.contenido)-1,None,None)
-                        self.simulador.MMU.actualizar(siguiente.Ptr,False,maxIndx,None,"-","-")
+                        #self.simulador.MMU.actualizar(siguiente.Ptr,False,"-",len(self.simulador.VRAM.contenido)-1,"-","-")
+                        self.simulador.MMU.actualizar(siguiente.Ptr,False,maxIndx,"-","-","-")
                     else:
                         #Agregar la pagina a la mmu si no estaba en ram ni vram
                         self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter,maxIndx,"-","-")

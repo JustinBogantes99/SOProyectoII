@@ -8,7 +8,7 @@ class MMU:
 
     #llamar cuando entra por primera vez una pagina a memoria
     def agregar(self,processID,ptr,LAddres,MAddres,mark,time):
-        item= itemMMU( ptr, processID,True,LAddres,MAddres,None,mark,time)#pageID unico ptr
+        item= itemMMU( ptr, processID,True,LAddres,MAddres,"-",mark,time)#pageID unico ptr
         if ptr in self.listaDeCositas:
             pass
         else:

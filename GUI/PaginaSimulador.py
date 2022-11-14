@@ -21,13 +21,6 @@ class PaginaSimulador(tk.Frame):
         label = tk.Label(self, text="Aqui va el simulador con las tablas")
         label.pack(padx=10, pady=10)
 
-        txt_button = tk.Button(
-            self,
-            text="Mostrar lista de procesos del txt",
-            command=self.test,
-        )
-        txt_button.pack(side="bottom", fill=tk.X)
-
         representarValores= [ " Page ID ","PID","LOADED","L-ADDR","M-ADDR","D-ADDR","LOADED-T","Mark"]
 
         frme_venta_optimo=tk.Frame(self,width="400", height="300")
@@ -93,40 +86,7 @@ class PaginaSimulador(tk.Frame):
             for y in range(len(MatrizLabelProcesoDatosAlgoritmo[0])):
                 MatrizLabelProcesoDatosAlgoritmo[x][y].grid(row=x, column=y)
 
-        optimo_button = tk.Button(
-            self,
-            text="Correr optimo",
-            command=self.optimo,
-        )
-        optimo_button.pack(side="bottom", fill=tk.X)
-
-        aging_button = tk.Button(
-            self,
-            text="Correr aging",
-            command=self.aging,
-        )
-        aging_button.pack(side="bottom", fill=tk.X)
-
-        lru_button = tk.Button(
-            self,
-            text="Correr lru",
-            command=self.lru,
-        )
-        lru_button.pack(side="bottom", fill=tk.X)
-
-        random_button = tk.Button(
-            self,
-            text="Correr random",
-            command=self.random,
-        )
-        random_button.pack(side="bottom", fill=tk.X)
-
-        secondchance_button = tk.Button(
-            self,
-            text="Correr secondchance",
-            command=self.secondchance,
-        )
-        secondchance_button.pack(side="bottom", fill=tk.X)
+        
 
         switch_window_button = tk.Button(
             self,
@@ -135,17 +95,9 @@ class PaginaSimulador(tk.Frame):
         )
         switch_window_button.pack(side="bottom", fill=tk.X)
 
-        debug_window_button = tk.Button(
-            self,
-            text="Debug",
-            command=self.debugcito,
-        )
-        debug_window_button.pack(side="bottom", fill=tk.X)
-        test = str(random.randint(0, 5))
 
-        self.label_test = tk.Label(self, text=test)
-        self.label_test.place(x=500, y=500)
 
+       
         
         self.tOptimo = threading.Thread(target=self.optimo)
         self.tAging = threading.Thread(target=self.aging)
@@ -155,7 +107,6 @@ class PaginaSimulador(tk.Frame):
 
     # ESTA FUNCION ES PARA EDITAR TODOS LOS LABELS PARA QUE SE ACTUALICE LA GUI
     def draw(self):
-        self.label_test['text'] = str(random.randint(0, 5))
         self.sim = self.parent.after(500, self.draw)
     # ESTA FUNCION SIRVE TEMPORALMENTE PARA CORRER EL DRAW Y EL OPTIMO
     def correr_simulacion(self):

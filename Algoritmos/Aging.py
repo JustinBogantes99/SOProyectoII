@@ -49,8 +49,6 @@ class Aging:
             sleep(2)
             siguiente = self.simulador.varasBarajadas.pop(0) #Toma el proceso en "ejecución" de la lista barajada
 
-            if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize: #Que haya memoria RAM disponible VERIFICAR
-                siguiente = self.simulador.varasBarajadas.pop(0) #Toma el proceso en "ejecución" de la lista barajada
             print("---------------------")
             print("Iteración", len(self.simulador.varasBarajadas))
             print("Tomando la página PID", siguiente.PID, " Ptr", siguiente.Ptr)

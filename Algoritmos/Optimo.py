@@ -39,7 +39,7 @@ class Optimo:
             
             siguiente=self.simulador.varasBarajadas.pop(0)
 
-            print("\n\n\n")
+            '''print("\n\n\n")
             print("---------------------")
             print("Iteración", len(self.simulador.varasBarajadas))
             print("Tomando la página PID", siguiente.PID, " Ptr", siguiente.Ptr)
@@ -49,7 +49,7 @@ class Optimo:
             print(self.simulador.VRAM.to_string())
             print("Actualmente la MMU tiene: \n\n")
             print(self.simulador.MMU.to_string())
-            print("\n\n\n")
+            print("\n\n\n")'''
 
             # La RAM todavía no está llena
             if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize:

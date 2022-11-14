@@ -41,13 +41,32 @@ class Simulador:
   
   def leer_txt(self):
     self.txt.pop(0)
+    max_ptr=int(self.txt[-1][1])+1
     lista=[]
     for i in range(len(self.txt)):
-      lista+=[list(map(int, self.txt[i]))]
+      if int(self.txt[i][2])>4096:
+        max_ptr,nuevos=self.agregarProcesos(max_ptr,self.txt[i])
+        max_ptr+=1
+        for proceso in nuevos:
+          lista+=[proceso]
+      else:
+        lista+=[list(map(int, self.txt[i]))]
     print("\n\n\n")
     print("Lista enteros") 
     print(lista)
     self.ListadeAccesos=lista
+
+  def agregarProcesos(self,max,proceso):
+    max=int(max)
+    memoria=int(proceso[2])//4096
+    lista=[]
+    cantidadMemoria=int(proceso[2])-(memoria*4096)
+    for x in range(memoria):
+      pag=[int(proceso[0]),max,4096]
+      lista.append(pag)
+      max+=1
+    lista.append([int(proceso[0]),max,cantidadMemoria])
+    return max,lista
   
   def crearBaraja(self):
     self.leer_txt()
@@ -60,7 +79,6 @@ class Simulador:
     print("Lista barajada")
     print(self.ListaAccesosBarajados)
     print("\n\n\n")
-    
     for pagina in self.ListadeAccesos:
       nuevaPagina= Pagina()
       nuevaPagina.PID=pagina[0]

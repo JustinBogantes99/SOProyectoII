@@ -22,21 +22,10 @@ class SecondChance:
 
 
     def simular(self):
+        print("CorriendoSecondChance")
         while(len(self.simulador.varasBarajadas)>0):
             siguiente = self.simulador.varasBarajadas.pop(0)
             
-
-            print("\n\n\n")
-            print("---------------------")
-            print("Iteración", len(self.simulador.varasBarajadas))
-            print("Tomando la página PID", siguiente.PID, " Ptr", siguiente.Ptr)
-            print("Actualmente la RAM tiene: \n\n")
-            print(self.simulador.RAM.to_string())
-            print("Actualmente la VRAM tiene: \n\n")
-            print(self.simulador.VRAM.to_string())
-            print("Actualmente la MMU tiene: \n\n")
-            print(self.simulador.MMU.to_string())
-            print("\n\n\n")
 
             # Si no se ha llenado la RAM
             if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize: # self.simulador.RAMSize
@@ -104,6 +93,7 @@ class SecondChance:
 
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
+
                         
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             memoriaUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()
@@ -126,3 +116,4 @@ class SecondChance:
         print("Actualmente la MMU tiene: \n\n")
         print(self.simulador.MMU.to_string())
         print("\n\n\n")
+

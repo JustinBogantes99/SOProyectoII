@@ -40,7 +40,7 @@ class LRU:
 
     # Esto se tiene que llamar simular
     def simular(self):
-        print("Corriendo el print")
+        print("CorriendoLRU")
         print(self.simulador.varasBarajadas)
         # Mientras haya algo por procesar
         while(len(self.simulador.varasBarajadas)>0):

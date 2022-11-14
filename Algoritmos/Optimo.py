@@ -35,8 +35,9 @@ class Optimo:
 
 
     def simular(self):
+
+        print("CorriendoOptimo")
         while(len(self.simulador.varasBarajadas)>0):
-            
             siguiente=self.simulador.varasBarajadas.pop(0)
 
             '''print("\n\n\n")
@@ -50,6 +51,9 @@ class Optimo:
             print("Actualmente la MMU tiene: \n\n")
             print(self.simulador.MMU.to_string())
             print("\n\n\n")'''
+
+
+
 
             # La RAM todavía no está llena
             if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize:
@@ -136,10 +140,3 @@ class Optimo:
             self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM.contenido)
             self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM.contenido)
 
-        print("Tiempo total: ",self.simulador.stats.TiempoSimulado)
-        print("Tiempo de Trashing: ",self.simulador.stats.TiempoTrashing)
-        print("RAM utilizada: ", self.simulador.stats.RAMUtilizada)
-        print("VRAM utilizada: ", self.simulador.stats.VRAMUtilizada)
-
-        print("RAM-",self.simulador.RAM.contenido)
-        print("VRRAM-",self.simulador.VRAM.contenido)

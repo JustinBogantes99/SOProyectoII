@@ -8,18 +8,14 @@ class Aging:
 
 
     def getIndexMasViejo(self):
-        
         for pagina in self.simulador.RAM.contenido:                            
-            if pagina.PID == self.vejezPaginas[0]:
-
+            if pagina.PID == self.vejezPaginas[0].PID:
                 return pagina.index()
 
     def calcularFragmentacionInternaAging(self):
         self.fragmentacionInternaAging = 0
-
         for pagina in self.simulador.RAM:
             self.simulador.stats.FragmentacionInterna = self.simulador.stats.FragmentacionInterna + ((4000 - pagina.Size) / 1000)
-
         return self.simulador.stats.FragmentacionInterna
 
     def calcularRAMUtilizadayVRAM(self):
@@ -31,13 +27,10 @@ class Aging:
         vram="VRAM-["
         for pagina in self.simulador.RAM.contenido:
             ram=ram+str(pagina.Ptr)+","
-        
         ram=ram+"]"
         for pagina in self.simulador.VRAM.contenido:
             vram=vram+str(pagina.Ptr)+","
-
         vram=vram+"]"
-
         print(ram)
         print(vram)
 
@@ -61,7 +54,7 @@ class Aging:
             print("\n\n\n")
             print("\n\n\n")
 
-            if len(self.simulador.RAM.contenido) < self.RAMSize: #Que haya memoria RAM disponible 
+            if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize: #Que haya memoria RAM disponible 
                 
                 if not self.simulador.RAM.encontrar(siguiente.Ptr): #Entra si no está dentro de la memoria RAM
 
@@ -73,12 +66,7 @@ class Aging:
                             if pagina.Ptr == siguiente.Ptr:
                                 self.simulador.VRAM.contenido.pop(index)
                                 break
-
-                    #if siguiente not in self.simulador.RAM.contenido: #condición que indica que no se encuentra en memoria #Cambiar uso con función encontrar de
-                    #if self.simulador.VRAM.contenido.count(siguiente) > 0: #condición que indica que se encuentra en el disco?.
-                        
                         self.simulador.RAM.contenido.append(siguiente)#Ingresa a la memoria RAM
-                            
                         self.vejezPaginas.append(siguiente.PID) #Lo añade a la lista de vejez de páginas, queda de último en la lista, o sea es la página utilizada más jóven que las demás.
                         index = siguiente.index()
 
@@ -169,7 +157,6 @@ class Aging:
         self.simulador.stats.RAMUtilizada=memoriaUtilizada[0]
         self.simulador.stats.VRAMUtilizada = memoriaUtilizada[1]
         self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
-        
         self.printMemorias()
 
 

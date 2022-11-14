@@ -1,4 +1,5 @@
 from Algoritmos.Aging import Aging
+from Algoritmos.AgingBelito import AgingBelito
 from Algoritmos.LRU import LRU
 from Algoritmos.Optimo import Optimo
 from Algoritmos.Random import Random
@@ -37,7 +38,7 @@ class Simulador:
     if tipoSimulador == "SecondChance":
       self.algoritmo = SecondChance(self)
     if tipoSimulador == "Aging":
-      self.algoritmo = Aging(self)
+      self.algoritmo = AgingBelito(self)
     
   def correr_algoritmo(self):
     self.algoritmo.simular()
@@ -86,6 +87,8 @@ class Simulador:
       nuevaPagina.Contador=0
       if self.tipoSimulador == "SecondChance":
         nuevaPagina.mark = False
+      if self.tipoSimulador == "Aging":
+        nuevaPagina.Contador="00000000"
       self.varasSinBarajar.append(nuevaPagina)
 
     for pagina in self.ListaAccesosBarajados:

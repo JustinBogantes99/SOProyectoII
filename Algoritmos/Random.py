@@ -46,7 +46,7 @@ class Random:
             print("Actualmente la MMU tiene: \n\n")
             print(self.simulador.MMU.to_string())
  
-            if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize:
+            if len(self.simulador.RAM.contenido) < 5:
                 if self.simulador.RAM.encontrar(siguiente.Ptr):
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
                 else:
@@ -60,7 +60,8 @@ class Random:
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
                 #sleep(2)
 
-            if len(self.simulador.RAM.contenido) >= self.simulador.RAM.RAMSize:
+            #RAM LLENA
+            else:
                 elegido=random.randint(0,len(self.simulador.RAM.contenido)-1)
                 if self.simulador.RAM.encontrar(siguiente.Ptr):
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
@@ -68,14 +69,17 @@ class Random:
                     if self.simulador.VRAM.encontrar(siguiente.Ptr):
                         for index, pagina in enumerate(self.simulador.VRAM.contenido):
                             if pagina.Ptr == siguiente.Ptr:
-                                self.simulador.VRAM.contenido.pop(index)
+                                #self.simulador.VRAM.contenido.pop(index)
+                                self.simulador.VRAM.sacar(index)
 
-                    self.simulador.VRAM.contenido.append(self.simulador.RAM.contenido[elegido])
+                    #self.simulador.VRAM.contenido.append(self.simulador.RAM.contenido[elegido])
+                    self.simulador.VRAM.meter(self.simulador.RAM.contenido[elegido])
                     #self.simulador.MMU.actualizar(self.simulador.RAM.contenido[elegido].Ptr,False,"-",len(self.simulador.RAM.contenido)-1,"-","-")
                     #self.simulador.MMU.actualizar (self.simulador.RAM.contenido[elegido].Ptr,"-","-",len(self.simulador.VRAM.contenido)-1,"-","-")
 
                     #actualizar la pagina que va a la VRAM
-                    self.simulador.MMU.actualizar(self.simulador.RAM.contenido[elegido].Ptr,False,"-",len(self.simulador.VRAM.contenido)-1,"-","-")
+                    DAddres= self.simulador.VRAM.encontrar_direccion(self.simulador.RAM.contenido[elegido].Ptr)
+                    self.simulador.MMU.actualizar(self.simulador.RAM.contenido[elegido].Ptr,False,"-",DAddres,"-","-")
 
                     self.simulador.RAM.contenido[elegido] = siguiente
                     self.simulador.stats.TiempoTrashing  = self.simulador.stats.TiempoTrashing  + 5

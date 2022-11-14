@@ -37,6 +37,15 @@ class Memoria:
 
         return (VRAMutilizda/self.RAMSize)*100
 
+    def cantidadDeProcesos(self):
+        procesos=[]
+        for pag in self.contenido:
+            if not pag.PID in procesos:
+                procesos.append(pag.PID)
+        
+        return len(procesos)
+            
+
     def to_string(self):
         for cont in self.contenido:
             cont.to_string()

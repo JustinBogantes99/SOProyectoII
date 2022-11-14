@@ -94,11 +94,119 @@ class PaginaSimulador(tk.Frame):
             command=self.correr_simulacion,
         )
         switch_window_button.pack(side="bottom", fill=tk.X)
+         #Labels de estadisticas
+        Optlabel_TSimulado = tk.Label(self, text="SIM-TIME")
+        Optlabel_TSimuladoData = tk.Label(self, text=" ")
+
+        Optlabel_Procesos = tk.Label(self, text="Procesos")
+        Optlabel_ProcesosData = tk.Label(self, text=" ")
+
+        Optlabel_URAM = tk.Label(self, text="RAM")
+        Optlabel_URAMData = tk.Label(self, text=" ")
+
+        Optlabel_UVRAM = tk.Label(self, text="VRAM")
+        Optlabel_UVRAMData = tk.Label(self, text=" ")
+
+        Optlabel_LPages = tk.Label(self, text="Loaded Pages")
+        Optlabel_LPagesData = tk.Label(self, text=" ")        
+
+        Optlabel_UPages = tk.Label(self, text="Unloaded Pages")
+        Optlabel_UPagesData = tk.Label(self, text=" ")  
+
+        Optlabel_Ttrashing = tk.Label(self, text="Trashing  Time")
+        Optlabel_TTrashingData = tk.Label(self, text=" ") 
+
+        Optlabel_TrashingPercent = tk.Label(self, text="Trashing Time %")
+        Optlabel_TrashingPercentData  = tk.Label(self, text=" ")
+
+        Optlabel_Frag = tk.Label(self, text="Fragmentacion")
+        Optlabel_FragData  = tk.Label(self, text=" ")   
+
+        label_TSimulado = tk.Label(self, text="SIM-TIME")
+        label_TSimuladoData = tk.Label(self, text=" ")
+
+        label_Procesos = tk.Label(self, text="Procesos")
+        label_ProcesosData = tk.Label(self, text=" ")
+
+        label_URAM = tk.Label(self, text="RAM")
+        label_URAMData = tk.Label(self, text=" ")
+
+        label_UVRAM = tk.Label(self, text="VRAM")
+        label_UVRAMData = tk.Label(self, text=" ")
+
+        label_LPages = tk.Label(self, text="Loaded Pages")
+        label_LPagesData = tk.Label(self, text=" ")        
+
+        label_UPages = tk.Label(self, text="Unloaded Pages")
+        label_UPagesData = tk.Label(self, text=" ")  
+
+        label_Ttrashing = tk.Label(self, text="Trashing  Time")
+        label_TTrashingData = tk.Label(self, text=" ") 
+
+        label_TrashingPercent = tk.Label(self, text="Trashing Time %")
+        label_TrashingPercentData  = tk.Label(self, text=" ")   
+
+        label_Frag = tk.Label(self, text="Fragmentacion")
+        label_FragData  = tk.Label(self, text=" ")       
+
+        #Posicion de los labels de estadisticas
+
+        Optlabel_TSimulado.place(x=150, y=500)
+        Optlabel_TSimuladoData.place(x=250 ,y=500)
+
+        Optlabel_Procesos.place(x=150, y= 520) 
+        Optlabel_ProcesosData.place(x=250, y= 520) 
+
+        Optlabel_URAM.place(x=150, y= 540) 
+        Optlabel_URAMData.place(x=250, y= 540)  
+
+        Optlabel_UVRAM.place(x=150, y= 560)
+        Optlabel_UVRAMData.place(x=250, y= 560)   
+
+        Optlabel_LPages.place(x=150, y= 580)
+        Optlabel_LPagesData.place(x=250, y= 580)    
+
+        Optlabel_UPages.place(x=150, y= 600)
+        Optlabel_UPagesData.place(x=250, y= 600)
+
+        Optlabel_Ttrashing.place(x=150, y= 620)
+        Optlabel_TTrashingData.place(x=250, y= 620)
+
+        Optlabel_TrashingPercent.place(x=150, y= 640)
+        Optlabel_TrashingPercentData.place(x=250, y= 640)
+
+        Optlabel_Frag.place(x=150, y= 660)
+        Optlabel_FragData.place(x=250, y= 660)
 
 
 
-       
-        
+        label_TSimulado.place(x=850, y=500)
+        label_TSimuladoData.place(x=850 ,y=500)
+
+        label_Procesos.place(x=850, y= 520) 
+        label_ProcesosData.place(x=250, y= 520) 
+
+        label_URAM.place(x=850, y= 540) 
+        label_URAMData.place(x=250, y= 540)  
+
+        label_UVRAM.place(x=850, y= 560)
+        label_UVRAMData.place(x=250, y= 560)   
+
+        label_LPages.place(x=850, y= 580)
+        label_LPagesData.place(x=250, y= 580)    
+
+        label_UPages.place(x=850, y= 600)
+        label_UPagesData.place(x=250, y= 600)
+
+        label_Ttrashing.place(x=850, y= 620)
+        label_TTrashingData.place(x=250, y= 620)
+
+        label_TrashingPercent.place(x=850, y= 640)
+        label_TrashingPercentData.place(x=250, y= 640)
+
+        label_Frag.place(x=850, y= 660)
+        label_FragData.place(x=250, y= 660)
+
         self.tOptimo = threading.Thread(target=self.optimo)
         self.tAging = threading.Thread(target=self.aging)
         self.tRandom = threading.Thread(target=self.random)

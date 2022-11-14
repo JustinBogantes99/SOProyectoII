@@ -72,7 +72,7 @@ class Simulador:
   def crearBaraja(self):
     self.leer_txt()
     self.ListaAccesosBarajados= copy.deepcopy(self.ListadeAccesos)
-    for x in range(0,50):
+    for x in range(0,len(self.ListaAccesosBarajados)*2):
       ran= random.randint(0,len(self.ListadeAccesos)-1)
       self.ListaAccesosBarajados.append(self.ListadeAccesos[ran])
     random.shuffle(self.ListaAccesosBarajados)

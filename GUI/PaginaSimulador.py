@@ -6,10 +6,12 @@ import random
 import threading
 import numpy as np
 from tkinter import *
+
 class PaginaSimulador(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.tamanio=(len(self.controller.fileContent)-1)+(len(self.controller.fileContent)*2)
         self.sim = None
         self.parent = parent
         self.simulador_optimo = None
@@ -18,40 +20,51 @@ class PaginaSimulador(tk.Frame):
         self.simulador_random = None
         self.simulador_secondchance = None
         self.simulador_usuario = None
+
         label = tk.Label(self, text="Aqui va el simulador con las tablas")
         label.pack(padx=10, pady=10)
 
-        representarValores= [ " Page ID ","PID","LOADED","L-ADDR","M-ADDR","D-ADDR","LOADED-T","Mark"]
+        switch_window_button = tk.Button(
+            self,
+            text="Correr simulacion",
+            command=self.correr_simulacion,
+        )
+        switch_window_button.pack(side="bottom", fill=tk.X)
+        self.tOptimo = threading.Thread(target=self.optimo)
+        self.tAging = threading.Thread(target=self.aging)
+        self.tRandom = threading.Thread(target=self.random)
+        self.tLRU = threading.Thread(target=self.lru)
+        self.tSecondChance = threading.Thread(target=self.secondchance)
 
+
+    def crearLabels(self):
+        #lista con los valores que tiene que mostrar cada proceso 
+        representarValores= [ " Page ID ","PID","LOADED","L-ADDR","M-ADDR","D-ADDR","LOADED-T","Mark"]
         frme_venta_optimo=tk.Frame(self,width="400", height="300")
         frme_venta_optimo.place(x=220,y=170)
-
+        #canvas creado en el frame
         my_canvas = tk.Canvas(frme_venta_optimo)
         my_canvas.config(width=400,height=300,)
         my_canvas.pack()
-        
+        #scrollbar que ubicado en el canvas
         my_scrollbar = ttk.Scrollbar(frme_venta_optimo, orient=VERTICAL, command=my_canvas.yview)
         my_scrollbar.pack(side=RIGHT, fill=Y)
-
         # Configure The Canvas
         my_canvas.configure(yscrollcommand=my_scrollbar.set)
         my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion = my_canvas.bbox("all")))
-        
+
         second_frame = Frame(my_canvas)
         my_canvas.create_window((0,0), window=second_frame)
-
         labelsOpt=[]
         labelsAlgo=[]
-        
         for j in range(len(representarValores)):#esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
             labelsOpt+=[tk.Label(second_frame,text=representarValores[j],bd=4)]
-
-        for i in range(120):#esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
+        for i in range(120):# self.tamanio*8 esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
+            print(i)
             labelsOpt+=[tk.Label(second_frame,text=str(i),bd=4)]
-        
-        
-
-        MatrizLabelProcesoDatos=np.reshape(labelsOpt, (16, 8))#aca son 7 columnas con la cantidad de filas que seria los cantidad de procesos multiplicados por 8 /7
+        #120/8=16
+        filasLabel=16#(self.tamanio*8)//8
+        MatrizLabelProcesoDatos=np.reshape(labelsOpt, (filasLabel, 8))#aca son 7 columnas con la cantidad de filas que seria los cantidad de procesos multiplicados por 8 /7
         for x in range(len(MatrizLabelProcesoDatos)):
             for y in range(len(MatrizLabelProcesoDatos[0])):
                 MatrizLabelProcesoDatos[x][y].grid(row=x, column=y)
@@ -74,37 +87,18 @@ class PaginaSimulador(tk.Frame):
         Third_frame = Frame(my_canvasTable2)
         my_canvasTable2.create_window((0,0), window=Third_frame)
 
-        for a in range(len(representarValores)):#esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
+        for a in range(len(representarValores)): 
             labelsAlgo+=[tk.Label(Third_frame,text=representarValores[a],bd=4)]
 
-        for i in range(120):#esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
+        #print(txt)
+        for i in range(self.tamanio*8):#esto son la cantidad de procesos multiplicados por 8 ya que son 8 datos a representar
             labelsAlgo+=[tk.Label(Third_frame,text=str(i),bd=4)]
 
-        MatrizLabelProcesoDatosAlgoritmo= np.reshape(labelsAlgo, (16, 8))
+        MatrizLabelProcesoDatosAlgoritmo= np.reshape(labelsAlgo, (filasLabel, 8))
 
         for x in range(len(MatrizLabelProcesoDatosAlgoritmo)):
             for y in range(len(MatrizLabelProcesoDatosAlgoritmo[0])):
                 MatrizLabelProcesoDatosAlgoritmo[x][y].grid(row=x, column=y)
-
-        
-
-        switch_window_button = tk.Button(
-            self,
-            text="Correr simulacion",
-            command=self.correr_simulacion,
-        )
-        switch_window_button.pack(side="bottom", fill=tk.X)
-
-
-
-       
-        
-        self.tOptimo = threading.Thread(target=self.optimo)
-        self.tAging = threading.Thread(target=self.aging)
-        self.tRandom = threading.Thread(target=self.random)
-        self.tLRU = threading.Thread(target=self.lru)
-        self.tSecondChance = threading.Thread(target=self.secondchance)
-
     # ESTA FUNCION ES PARA EDITAR TODOS LOS LABELS PARA QUE SE ACTUALICE LA GUI
     def draw(self):
         self.sim = self.parent.after(500, self.draw)
@@ -120,6 +114,7 @@ class PaginaSimulador(tk.Frame):
             self.tSecondChance.start()
         if self.controller.algoritmo_escogido == "Random":
             self.tRandom.start()
+        #self.crearLabels()
         self.draw()
         self.tOptimo.join()
         if self.controller.algoritmo_escogido == "Aging":

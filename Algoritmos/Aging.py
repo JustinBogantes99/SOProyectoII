@@ -1,9 +1,18 @@
+from time import sleep
 class Aging:
 
     def __init__(self, simulador):
         
         self.simulador = simulador
         self.vejezPaginas = []  #Corresponde al orden en el que las llamadas a las paginas se va realizando, L[0] = la más antigua.
+
+
+    def getIndexMasViejo(self):
+        
+        for pagina in self.simulador.RAM.contenido:                            
+            if pagina.PID == self.vejezPaginas[0]:
+
+                return pagina.index()
 
     def calcularFragmentacionInternaAging(self):
         self.fragmentacionInternaAging = 0
@@ -32,54 +41,118 @@ class Aging:
         print(ram)
         print(vram)
 
+        
+
+
+
 
     def simular(self): #Considerar siempre que la competencia la hacen la vejez de las páginas, y que hay que cargar los procesos en RAM 
         
-        while(len(self.simulador.varasBarajadas) > 1): #Que sigan habiendo páginas pendientes de llamado
+        while(len(self.simulador.varasBarajadas) > 0): #Que sigan habiendo páginas pendientes de llamado
+            sleep(2)
+            siguiente = self.simulador.varasBarajadas.pop(0) #Toma el proceso en "ejecución" de la lista barajada
 
             if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize: #Que haya memoria RAM disponible VERIFICAR
                 siguiente = self.simulador.varasBarajadas.pop(0) #Toma el proceso en "ejecución" de la lista barajada
+            print("---------------------")
+            print("Iteración", len(self.simulador.varasBarajadas))
+            print("Tomando la página PID", siguiente.PID, " Ptr", siguiente.Ptr)
+            print("Actualmente la RAM tiene: \n\n")
+            print(self.simulador.RAM.to_string())
+            print("Actualmente la VRAM tiene: \n\n")
+            print(self.simulador.VRAM.to_string())
+            print("Actualmente la MMU tiene: \n\n")
+            print(self.simulador.MMU.to_string())
+            print("\n\n\n")
+            print("\n\n\n")
 
-                if siguiente not in self.simulador.RAM.contenido: #condición que indica que no se encuentra en memoria 
+            if len(self.simulador.RAM.contenido) < self.RAMSize: #Que haya memoria RAM disponible 
+                
+                if not self.simulador.RAM.encontrar(siguiente.Ptr): #Entra si no está dentro de la memoria RAM
 
+                    if self.simulador.VRAM.encontrar(siguiente.Ptr)==True: #Entra si la pagina se encuentra en la memoria VRAM
+                        print("VRAM NO FULL PAGE FAULT - TOMANDO PAGINA DE VRAM")
+
+                        for index, pagina in enumerate(self.simulador.VRAM.contenido):
+                           
+                            if pagina.Ptr == siguiente.Ptr:
+                                self.simulador.VRAM.contenido.pop(index)
+                                break
+
+                    #if siguiente not in self.simulador.RAM.contenido: #condición que indica que no se encuentra en memoria #Cambiar uso con función encontrar de
                     #if self.simulador.VRAM.contenido.count(siguiente) > 0: #condición que indica que se encuentra en el disco?.
-                    #self.simulador.VRAM.contenido.remove(siguiente) #No me queda claro aún el uso de la Vram, entonces es como placeholer jaja 
-
-                    self.simulador.RAM.contenido.append(siguiente)  #Ingresa a la memoria RAM
                         
-                    self.vejezPaginas.append(siguiente[1]) #Lo añade a la lista de vejez dee páginas, queda de último en la lista, o sea es la página utilizada más jóven que las demás.
+                        self.simulador.RAM.contenido.append(siguiente)#Ingresa a la memoria RAM
+                            
+                        self.vejezPaginas.append(siguiente.PID) #Lo añade a la lista de vejez dee páginas, queda de último en la lista, o sea es la página utilizada más jóven que las demás.
 
-                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 5
-                    self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing + 5
+                        self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 5
+                        self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing + 5
 
-                #Cuando no se cumple la condición del IF significa que el proceso sí está en memoria, por lo tanto solamente se actualiza la lista de orden de las páginas utilizadas.
-                #O sea se pone como la más jóven la que se está llamando, en este caso sería la que esté en "siguiente"
-                self.vejezPaginas.remove(siguiente[1]) #Elimina el id de la página de la lista de Vejez,
-                self.vejezPaginas.append(siguiente[1]) #Lo añade a la lista de vejez de páginas, queda de último en la lista, o sea es la página utilizada más jóven que las demás por su llamada reciente.
-
-                #self.simulador.VRAM.contenido.remove(siguiente) ##No me queda claro aún el uso de la Vram, entonces es como placeholer jaja 
+                
             
+                    self.simulador.RAM.contenido.append(siguiente)
+                    #self.vejezPaginas.remove(siguiente[1]) #Elimina el id de la página de la lista de Vejez
+                    self.vejezPaginas.append(siguiente.PID) #Lo añade a la lista de vejez de páginas, queda de último en la lista, o sea es la página utilizada más jóven que las demás por su llamada reciente.
+
+                
+                #Aca solamente se actualiza la lista de vejez de las paginas, por lo que no se afecta la ram. 
+                self.vejezPaginas.remove(siguiente.PID) #Elimina el id de la página de la lista de Vejez
+                self.vejezPaginas.append(siguiente.PID) #Lo añade a la lista de vejez de páginas, queda de último en la lista, o sea es la página utilizada más jóven que las demás por su llamada reciente.
+
+
             #Cuando no existe memoria disponible en la RAM 
             #El id de página que se va a eliminar siempre va a ser el vejezPaginas[0] ya que es el más viejo al que se le dio uso. 
-            for Pagina in self.simulador.RAM.contenido: #Recorre los procesos en RAM actuales para buscar el que cumpla con el id de página a eliminar.
+            else:
 
-                if Pagina[1] == self.vejezPaginas[0]:
-                    self.simulador.RAM.contenido.remove(Pagina) #Quita la pagina que por el algoritmo debe salir
-                    self.simulador.RAM.contenido.append(siguiente) #Agrega la nueva página a utilizar
+                if not self.simulador.RAM.encontrar(siguiente.Ptr): #No está en la RAM
+                    print("PAGE FAULT - LA PAGINA NO ESTA EN LA RAM")
                 
-                    self.vejezPaginas.remove(Pagina[1]) #Elimina el id de la página de la lista de Vejez que debe salir por el algoritmo
-                    self.vejezPaginas.append(siguiente[1]) #Añade a la nueva página, como la más jóven de la lista de la vejez
+                    if self.simulador.VRAM.encontrar(siguiente.Ptr) == True: #Entra si la encuentra en la VRAM
+                        
+                        PIDdeLaMasViejaUsada = self.vejezPaginas[0] #Corresponde al PID de la pagina que se tiene que sacar de la RAM y meter al VRAM
+                        for pagina in self.simulador.RAM.contenido: #Recorre RAM para sacarla y hacer espacio                             
 
-                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 5 #costo de la ejecución por pagefault
-                    self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing + 5 #costo de la ejecución por pagefault                    
+                            if pagina.PID == PIDdeLaMasViejaUsada:
+
+                                indexDeLaMasVieja = self.getIndexMasViejo() #Devuelve el index de la mas vieja, esto porque no se puede hacer por PID
+
+                                self.simulador.VRAM.contenido.append(pagina) #Mete la que se va a sacar de RAM dentro de la VRAM
+                                self.simulador.RAM.contenido[indexDeLaMasVieja] = siguiente #Sustituye en RAM la que  salio de VRAM
+                                self.simulador.VRAM.contenido.pop(siguiente) #Elimina de VRAM la que mando a RAM
+
+                                #Actualiza la lista de vejez con los cambios hechos en VRAM y RAM
+                                self.vejezPaginas.remove(PIDdeLaMasViejaUsada)
+                                self.vejezPaginas.append(siguiente.PID)
                     
+                    # La página no se encontro en VRAM - Hay que crearla
+                    PIDdeLaMasViejaUsada = self.vejezPaginas[0] #Corresponde al PID de la pagina que se tiene que sacar de la RAM y meter al VRAM
+                    for pagina in self.simulador.RAM.contenido: #Recorrer RAM para encontrarla
 
-        
+                        if pagina.PID == PIDdeLaMasViejaUsada: #La encuentra con esta condicion
+                            indexDeLaMasVieja = self.getIndexMasViejo()
+                            
+                            self.simulador.VRAM.contenido.append(pagina)
+                            self.simulador.RAM.contenido[indexDeLaMasVieja] = siguiente
+
+                            #Actualiza la lista de vejez con los cambios hechos en VRAM y RAM
+                            self.vejezPaginas.remove(PIDdeLaMasViejaUsada)
+                            self.vejezPaginas.append(siguiente.PID)
+
+            
+
+                self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
+                #Aca solamente se actualiza la lista de vejez de las paginas, por lo que no se afecta la ram. 
+                self.vejezPaginas.remove(siguiente.PID) #Elimina el id de la página de la lista de Vejez
+                self.vejezPaginas.append(siguiente.PID) #Lo añade a la lista de vejez de páginas, queda de último en la lista, o sea es la página utilizada más jóven que las demás por su llamada reciente.
 
 
+        self.calcularFragmentacionInternaAging()
+        self.calcularRAMUtilizadaYVRAM()
+        self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM.contenido)
+        self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM.contenido)
 
 
     # AQUI TIENE QUE IR TODA LA IMPLEMENTACION DE LOS METODOS PARA HACER FUNCIONAR EL ALGORITMO
     # NO CAMBIAR EL NOMBRE
-    def simular(self):
         pass

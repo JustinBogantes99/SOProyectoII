@@ -11,7 +11,7 @@ class Windows(tk.Tk):
         self.seed = ""
 
         self.wm_title("Proyecto II: Sistemas Operativos")
-        self.geometry("1600x1080+280+0")
+        self.geometry("1600x1070+10+10")
 
         container = tk.Frame(self, height=300, width=300)
         container.pack(side="top", fill="both", expand=True)

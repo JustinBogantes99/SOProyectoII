@@ -15,18 +15,29 @@ class SecondChance:
                 self.simulador.RAM.contenido.append(candidate)
                 self.simulador.MMU.actualizar(candidate.Ptr,True,len(self.simulador.RAM.contenido)-1,"-",candidate.mark,"-") #actualizar candidate en mmu
             else:
-                self.simulador.VRAM.contenido.append(candidate)
-                self.simulador.MMU.actualizar(candidate.Ptr,False,"-",len(self.simulador.VRAM.contenido)-1,candidate.mark,"-") #actualizar candidate en mmu
+                #self.simulador.VRAM.contenido.append(candidate)
+                self.simulador.VRAM.meter(candidate)
+                DAddres= self.simulador.VRAM.encontrar_direccion(candidate.Ptr)
+                self.simulador.MMU.actualizar(candidate.Ptr,False,"-",DAddres,candidate.mark,"-") #actualizar candidate en mmu
                 self.simulador.RAM.contenido.append(pagina_a_ram)
                 self.simulador.MMU.actualizar(pagina_a_ram.Ptr,True,len(self.simulador.RAM.contenido)-1,"-",pagina_a_ram.mark,"-") #actualizar pagina_a_ram en mmu
                 
                 paging_not_done = False
                 break
 
+    def corregirMAddres(self):
+        for key, value in self.simulador.MMU.listaDeCositas.items():
+            for pagina in self.simulador.RAM.contenido:
+                if key== pagina.Ptr:
+                    value.MAddres= self.simulador.RAM.contenido.index(pagina)
+
+
+
 
     def simular(self):
         print("CorriendoSecondChance")
         while(len(self.simulador.varasBarajadas)>0):
+            
             sleep(1)
             siguiente = self.simulador.varasBarajadas.pop(0)
             
@@ -73,7 +84,8 @@ class SecondChance:
                     if self.simulador.VRAM.encontrar(siguiente.Ptr)==True:
                         for index, pagina in enumerate(self.simulador.VRAM.contenido):
                             if pagina.Ptr == siguiente.Ptr:
-                                pagina_a_ram = self.simulador.VRAM.contenido.pop(index)
+                                #pagina_a_ram = self.simulador.VRAM.contenido.pop(index)
+                                pagina_a_ram=self.simulador.VRAM.sacar(index)
                                 break
                         self.paging_bueno(pagina_a_ram)
 
@@ -98,7 +110,7 @@ class SecondChance:
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
 
-                        
+            self.corregirMAddres()            
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             memoriaUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()
             self.simulador.stats.RAMUtilizada=memoriaUtilizada[0]

@@ -11,17 +11,31 @@ class Memoria:
         random.seed(seed)
         # item : Pagina
 
-    def random_uuid():
-        uuid = uuid.UUID(bytes=bytes(random.getrandbits(8) for _ in range(16)), version=4)
-        return str(uuid)[:4]
+    def random_uuid(self):
+        puuid = uuid.UUID(bytes=bytes(random.getrandbits(8) for _ in range(16)), version=4)
+        return str(puuid)[:6]
 
-    def sacar(self, pagina):
-        pass
+    def sacar(self, index):
+        pagina = self.contenido.pop(index)
+        llave= None
+        for key, value in self.direcciones_DAddres.items():
+            if value == pagina.Ptr:
+                llave=key
+               
+        
+        del self.direcciones_DAddres[llave]
+        return pagina
 
     def meter(self, pagina):
+        self.contenido.append(pagina)
+        key= self.random_uuid()
+        self.direcciones_DAddres[key]=pagina.Ptr
         pass
 
     def encontrar_direccion(self, ptr):
+        for key, value in self.direcciones_DAddres.items():
+            if value==ptr:
+                return key
         pass
     
     def encontrar(self,ptr):

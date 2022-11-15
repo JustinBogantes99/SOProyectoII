@@ -44,7 +44,6 @@ class LRU:
         print(self.simulador.varasBarajadas)
         # Mientras haya algo por procesar
         while(len(self.simulador.varasBarajadas)>0):
-            sleep(1)
             siguiente = self.simulador.varasBarajadas.pop(0)
             
             print("\n\n\n")
@@ -159,7 +158,7 @@ class LRU:
                 for pagina in self.simulador.RAM.contenido:
                     pagina.Contador+=1
                     self.simulador.MMU.actualizarAMarcadoYTiempo(pagina.Ptr,pagina.Contador,"-")
-
+            sleep(1)
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             memoriaUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()
             self.simulador.stats.RAMUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()
@@ -167,9 +166,3 @@ class LRU:
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM.contenido)
             self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM.contenido)
-        print("Tiempo total: ",self.simulador.stats.TiempoSimulado)
-        print("Tiempo de Trashing: ",self.simulador.stats.TiempoTrashing)
-        print("RAM utilizada: ", self.simulador.stats.RAMUtilizada)
-        print("VRAM utilizada: ", self.simulador.stats.VRAMUtilizada)
-        self.printMemorias()
-        print("\n\n\n")

@@ -20,6 +20,7 @@ class Simulador:
     self.ListadeAccesos = []
     self.ListaAccesosBarajados = []
     self.varasSinBarajar = []
+    self.colorcitos = {}
     random.seed(self.seed)
     self.RAM = Memoria(100, self.seed)
     self.VRAM = Memoria(100, self.seed)
@@ -36,6 +37,17 @@ class Simulador:
       self.algoritmo = SecondChance(self)
     if tipoSimulador == "Aging":
       self.algoritmo = Aging(self)
+
+  def random_color(self):
+    r = lambda: random.randint(0,255)
+    color = '#%02X%02X%02X' % (r(),r(),r())
+    return color
+
+  def color(self, PID):
+    if PID in self.colorcitos.keys():
+      pass
+    else:
+      self.colorcitos[PID]=self.random_color()
     
   def correr_algoritmo(self):
     self.algoritmo.simular()
@@ -74,6 +86,7 @@ class Simulador:
       self.ListaAccesosBarajados.append(self.ListadeAccesos[ran])
     random.shuffle(self.ListaAccesosBarajados)
     for pagina in self.ListadeAccesos:
+      self.color(pagina[0])
       nuevaPagina= Pagina()
       nuevaPagina.PID=pagina[0]
       nuevaPagina.Ptr=pagina[1]

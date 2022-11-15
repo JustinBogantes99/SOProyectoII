@@ -36,7 +36,6 @@ class Random:
     def simular(self):
         print("CorriendoRandom")
         while(len(self.simulador.varasBarajadas)>1):
-            sleep(1)
             siguiente=self.simulador.varasBarajadas.pop(0)
             
             print("Actualmente la RAM tiene: \n\n")
@@ -95,7 +94,7 @@ class Random:
 
                 #sleep(2)
 
-            
+            sleep(1)
             
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             self.simulador.stats.RAMUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()

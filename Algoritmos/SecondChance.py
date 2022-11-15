@@ -40,8 +40,6 @@ class SecondChance:
     def simular(self):
         print("CorriendoSecondChance")
         while(len(self.simulador.varasBarajadas)>0):
-            
-            sleep(1)
             siguiente = self.simulador.varasBarajadas.pop(0)
             
 
@@ -112,7 +110,7 @@ class SecondChance:
 
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
 
-
+            sleep(1)
             self.corregirMAddres()            
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             self.simulador.stats.RAMUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()

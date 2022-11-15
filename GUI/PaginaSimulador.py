@@ -195,7 +195,7 @@ class PaginaSimulador(tk.Frame):
             self.tstatsopt.insert('', 'end', values=("Paginas en Memoria",self.simulador_optimo.stats.PaginasEnMemoria))
             self.tstatsopt.insert('', 'end', values=("Paginas en Disco",self.simulador_optimo.stats.PaginasEnDisco))
             for pag in self.simulador_optimo.RAM.contenido:
-                self.tram.insert('', 'end', values=(pag.Ptr))
+                self.tram.insert('', 'end', values=(pag.Ptr), tags=(pag.PID))
             for item in self.simulador_optimo.MMU.listaDeCositas.items():
                 item = item[1]
                 self.opt.insert('', 'end', values=(item.pageID, 
@@ -205,7 +205,10 @@ class PaginaSimulador(tk.Frame):
                                                     item.MAddres, 
                                                     item.DAddres, 
                                                     item.time, 
-                                                    item.mark ))
+                                                    item.mark ), tags=(item.processID))
+            for pag in self.simulador.varasSinBarajar:
+                self.tram.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])
+                self.opt.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])                                       
         if not self.simulador == None:
             self.tstats.insert('', 'end', values=("Tiempo Simulado",self.simulador.stats.TiempoSimulado))
             self.tstats.insert('', 'end', values=("Tiempo Trashing",self.simulador.stats.TiempoTrashing))
@@ -215,7 +218,7 @@ class PaginaSimulador(tk.Frame):
             self.tstats.insert('', 'end', values=("Paginas en Memoria",self.simulador.stats.PaginasEnMemoria))
             self.tstats.insert('', 'end', values=("Paginas en Disco",self.simulador.stats.PaginasEnDisco))
             for pag in self.simulador.RAM.contenido:
-                self.tvram.insert('', 'end', values=(pag.Ptr))
+                self.tvram.insert('', 'end', values=(pag.Ptr), tags=(pag.PID))
             for item in self.simulador.MMU.listaDeCositas.items():
                 item = item[1]
                 self.alg.insert('', 'end', values=(item.pageID, 
@@ -225,8 +228,10 @@ class PaginaSimulador(tk.Frame):
                                                     item.MAddres, 
                                                     item.DAddres, 
                                                     item.time, 
-                                                    item.mark ))
-        
+                                                    item.mark ), tags=(item.processID))
+            for pag in self.simulador.varasSinBarajar:
+                self.tvram.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])
+                self.alg.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])
 
         self.sim = self.parent.after(500, self.draw)
 
@@ -234,7 +239,6 @@ class PaginaSimulador(tk.Frame):
         print("AYUDAME JESUS")
         print(self.controller.fileContent)
         self.tmp = copy.deepcopy(self.controller.fileContent)
-        self.tOptimo.start()
         if self.controller.algoritmo_escogido == "Aging":
             self.tAging.start()
         if self.controller.algoritmo_escogido == "LRU":
@@ -243,6 +247,7 @@ class PaginaSimulador(tk.Frame):
             self.tSecondChance.start()
         if self.controller.algoritmo_escogido == "Random":
             self.tRandom.start()
+        self.tOptimo.start()
 
 
     def optimo(self):

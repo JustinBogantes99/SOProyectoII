@@ -89,6 +89,17 @@ class PaginaPrincipal(tk.Frame):
             print(e)
         listaProcesos = []
         for x in range(len(lines)):
-            listaProcesos += [lines[x].split(", ")]
+            jesucristo = lines[x].split(",")
+            
+            
+            jesucristo[0]=jesucristo[0].replace('\t', '')
+            jesucristo[1]=jesucristo[1].replace('\t', '')
+            jesucristo[2]=jesucristo[2].replace('\t', '')
+            jesucristo[0]=jesucristo[0].replace(' ', '')
+            jesucristo[1]=jesucristo[1].replace(' ', '')
+            jesucristo[2]=jesucristo[2].replace(' ', '')
+
+            print(jesucristo)
+            listaProcesos += [jesucristo]
         self.controller.fileContent = listaProcesos
         print(self.controller.fileContent)

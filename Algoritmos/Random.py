@@ -57,7 +57,7 @@ class Random:
            
                         
 
-                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
+                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+6
                 #sleep(2)
 
             #RAM LLENA
@@ -87,7 +87,7 @@ class Random:
                     #actualizar pagina que pasa de la VRAM a la RAM
                     if  siguiente.Ptr in self.simulador.MMU.listaDeCositas:
                         #self.simulador.MMU.actualizar(siguiente.Ptr,False,"-",len(self.simulador.VRAM.contenido)-1,"-","-")
-                        self.simulador.MMU.actualizar(siguiente.Ptr,False,elegido,"-","-","-")
+                        self.simulador.MMU.actualizar(siguiente.Ptr,True,elegido,"-","-","-")
                     else:
                         #Agregar la pagina a la mmu si no estaba en ram ni vram
                         self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter,elegido,"-","-")
@@ -98,9 +98,8 @@ class Random:
             
             
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
-            memoriaUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()
-            self.simulador.stats.RAMUtilizada=memoriaUtilizada[0]
-            self.simulador.stats.VRAMUtilizada = memoriaUtilizada[1]
+            self.simulador.stats.RAMUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()
+            self.simulador.stats.VRAMUtilizada = self.simulador.VRAM.calcularMemoriaUtilizada()
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM.contenido)
             self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM.contenido)

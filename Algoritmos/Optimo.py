@@ -77,7 +77,7 @@ class Optimo:
                     # La pagina no esta en RAM, hay que agregarla sin paging
                     self.simulador.RAM.contenido.append(siguiente)
                     self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter,len(self.simulador.RAM.contenido)-1,"-","-")
-                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
+                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+6
 
                 # La página se encontró en la RAM
                 else:
@@ -128,9 +128,9 @@ class Optimo:
             self.calcularAccesosfaltanttes()
             
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
-            memoriaUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()
-            self.simulador.stats.RAMUtilizada=memoriaUtilizada[0]
-            self.simulador.stats.VRAMUtilizada = memoriaUtilizada[1]
+          
+            self.simulador.stats.RAMUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()
+            self.simulador.stats.VRAMUtilizada = self.simulador.VRAM.calcularMemoriaUtilizada()
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM.contenido)
             self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM.contenido)

@@ -79,7 +79,7 @@ class LRU:
                     self.simulador.RAM.contenido.append(siguiente)#key, loaded, MAddres, DAddres,mark,time
                     self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter, len(self.simulador.RAM.contenido)-1, siguiente.mark, siguiente.Contador)
                     #self.simulador.MMU.actualizar(siguiente.Ptr,True,len(self.simulador.RAM.contenido)-1,"-",siguiente.Contador,"-")
-                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
+                    self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+6
 
                 elif self.simulador.RAM.encontrar(siguiente.Ptr)==True:
                     for pag in self.simulador.RAM.contenido:
@@ -120,7 +120,7 @@ class LRU:
                                         self.simulador.VRAM.sacar(index)
 
                             cont+=1
-                        self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+5
+                        self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+6
                         self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing+5
 
                     # La página no se encontro en VRAM - Hay que crearla
@@ -138,6 +138,8 @@ class LRU:
                                 self.simulador.RAM.contenido[cont]=siguiente
                                 self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter, cont, siguiente.mark, siguiente.Contador)
                                 pagina.Contador = 0
+                                self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+6
+                                self.simulador.stats.TiempoTrashing = self.simulador.stats.TiempoTrashing+5
                                 
                     
                             cont+=1
@@ -160,8 +162,8 @@ class LRU:
 
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             memoriaUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()
-            self.simulador.stats.RAMUtilizada=memoriaUtilizada[0]
-            self.simulador.stats.VRAMUtilizada = memoriaUtilizada[1]
+            self.simulador.stats.RAMUtilizada=self.simulador.RAM.calcularMemoriaUtilizada()
+            self.simulador.stats.VRAMUtilizada = self.simulador.VRAM.calcularMemoriaUtilizada()
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM.contenido)
             self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM.contenido)

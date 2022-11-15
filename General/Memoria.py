@@ -7,7 +7,6 @@ class Memoria:
         self.contenido = []
         self.direcciones_DAddres = {}
         self.RAMSize= RAMSIZE
-        self.FragmentacionInterna=0
         random.seed(seed)
         # item : Pagina
 
@@ -46,22 +45,22 @@ class Memoria:
         return False
 
     def calcularFragmentacionInterna(self):
-        self.FragmentacionInternaOpt=0
+        FragmentacionInterna=0
         for pagina in self.contenido:
-            self.FragmentacionInterna = self.FragmentacionInterna + ((4000-pagina.Size))
-        return self.FragmentacionInterna
+            FragmentacionInterna = FragmentacionInterna + ((4000-pagina.Size))
+        return FragmentacionInterna
 
     def calcularMemoriaUtilizada(self):
         uRAM=len(self.contenido)*4000
-        uVRAM= len(self.contenido)*4000
+      
 
-        return [uRAM,uVRAM]
+        return uRAM
 
     def calcularProcentajeRAM(self):
         
         return len(self.contenido)
 
-    def calcularProcentajeRAM(self):
+    def calcularProcentajeVRAM(self):
         VRAMutilizda= len(self.contenido)
 
         return (VRAMutilizda/self.RAMSize)*100

@@ -7,8 +7,6 @@ class Random:
         random.seed(self.simulador.seed)
         pass
     
-
-
     def calcularRAMUtilizadaYVRAM(self):
         self.simulador.stats.RAMUtilizada=len(self.simulador.RAM.contenido)*4096
         self.simulador.stats.VRAMUtilizada = len(self.simulador.VRAM.contenido)*4096
@@ -37,13 +35,7 @@ class Random:
         print("CorriendoRandom")
         while(len(self.simulador.varasBarajadas)>1):
             siguiente=self.simulador.varasBarajadas.pop(0)
-            
-            print("Actualmente la RAM tiene: \n\n")
-            print(self.simulador.RAM.to_string())
-            print("Actualmente la VRAM tiene: \n\n")
-            print(self.simulador.VRAM.to_string())
-            print("Actualmente la MMU tiene: \n\n")
-            print(self.simulador.MMU.to_string())
+
  
             if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize:
                 if self.simulador.RAM.encontrar(siguiente.Ptr):

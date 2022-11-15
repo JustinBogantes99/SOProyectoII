@@ -6,9 +6,9 @@ from .shared_imports import *
 from General.Simulador import Simulador
 import random
 import threading
-import numpy as np
 from tkinter import *
 import copy
+import os
 
 class PaginaSimulador(tk.Frame):
     def __init__(self, parent, controller):
@@ -63,12 +63,22 @@ class PaginaSimulador(tk.Frame):
         self.simulador_optimo = None
         self.simulador = None
 
-        switch_window_button = tk.Button(
+        self.window_button = tk.Button(
+            self,
+            text="Salir",
+            command=self.salir,
+        )
+        self.window_button.pack(side="bottom", fill=tk.X)
+
+        self.switch_window_button = tk.Button(
             self,
             text="Correr simulacion",
             command=self.correr_simulacion,
         )
-        switch_window_button.pack(side="bottom", fill=tk.X)
+        self.switch_window_button.pack(side="bottom", fill=tk.X)
+
+
+
         self.tOptimo = threading.Thread(target=self.optimo)
         self.tAging = threading.Thread(target=self.aging)
         self.tRandom = threading.Thread(target=self.random)
@@ -265,8 +275,12 @@ class PaginaSimulador(tk.Frame):
 
         self.sim = self.parent.after(500, self.draw)
 
+    def salir(self):
+        os._exit(os.EX_OK)
+
     def correr_simulacion(self):
         print("AYUDAME JESUS")
+        self.switch_window_button['state'] = 'disabled'
         print(self.controller.fileContent)
         self.tmp = copy.deepcopy(self.controller.fileContent)
         if self.controller.algoritmo_escogido == "Aging":
@@ -278,6 +292,10 @@ class PaginaSimulador(tk.Frame):
         if self.controller.algoritmo_escogido == "Random":
             self.tRandom.start()
         self.tOptimo.start()
+
+
+
+
 
 
     def optimo(self):

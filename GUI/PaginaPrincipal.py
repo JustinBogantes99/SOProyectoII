@@ -29,7 +29,7 @@ class PaginaPrincipal(tk.Frame):
 
         label_archivo = tk.Label(self, text="Seleccion el archivo a cargar")
         self.label_nombre_archivo = tk.Label(self, text="")
-        button_archivo = ttk.Button(
+        self.button_archivo = ttk.Button(
             self,
             text='Importar archivo',
             command=self.select_file
@@ -51,7 +51,7 @@ class PaginaPrincipal(tk.Frame):
 
         label_archivo.place(x=100, y=500)
         self.label_nombre_archivo.place(x=100, y=500)
-        button_archivo.place(x=300, y=500)
+        self.button_archivo.place(x=300, y=500)
 
         button_empezar.place(x=600, y=640)
 
@@ -84,6 +84,7 @@ class PaginaPrincipal(tk.Frame):
         try:
             with fd.askopenfile(filetypes=filetypes) as f:
                 self.label_nombre_archivo.config(text=f.name)
+                self.button_archivo.place(x=100, y=540)
                 lines = [line.rstrip('\n') for line in f]
         except Exception as e:
             print(e)

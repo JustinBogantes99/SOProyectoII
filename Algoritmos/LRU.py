@@ -45,21 +45,9 @@ class LRU:
         # Mientras haya algo por procesar
         while(len(self.simulador.varasBarajadas)>0):
             siguiente = self.simulador.varasBarajadas.pop(0)
-            
-            print("\n\n\n")
-            print("---------------------")
-            print("Iteración", len(self.simulador.varasBarajadas))
-            print("Tomando la página PID", siguiente.PID, " Ptr", siguiente.Ptr)
-            print("Actualmente la RAM tiene: \n\n")
-            print(self.simulador.RAM.to_string())
-            print("Actualmente la VRAM tiene: \n\n")
-            print(self.simulador.VRAM.to_string())
-            print("Actualmente la MMU tiene: \n\n")
-            print(self.simulador.MMU.to_string())
-            print("\n\n\n")
+
             # Si no se ha llenado la RAM
             if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize:#self.simulador.RAMSize
-                print("La RAM no está llena, metiendo un nuevo proceso")
 
                 if self.simulador.RAM.encontrar(siguiente.Ptr)==False:
 
@@ -89,15 +77,12 @@ class LRU:
 
             # Si la RAM esta llena
             else:
-                print("La RAM está llena, intercambio de paginas activado")
 
                 # Si la pagina no se encuentra en RAM
                 if self.simulador.RAM.encontrar(siguiente.Ptr)==False:
-                    print("No encontré la página en RAM")
 
                     # Si la página se encuentra en VRAM
                     if self.simulador.VRAM.encontrar(siguiente.Ptr)==True:
-                        print("Encontré la página en VRAM")
                         Paginamayor=self.sacarMayorLRU()
                         cont = 0
                         for pagina in self.simulador.RAM.contenido:
@@ -124,7 +109,6 @@ class LRU:
 
                     # La página no se encontro en VRAM - Hay que crearla
                     else:
-                        print("No encontré la página en VRAM")
                         Paginamayor = self.sacarMayorLRU()
                         cont = 0
                         for pagina in self.simulador.RAM.contenido:
@@ -146,7 +130,6 @@ class LRU:
  
                 # La página se encontró en RAM (Aplicar LRU al mark)
                 elif self.simulador.RAM.encontrar(siguiente.Ptr):
-                    print("La página se encontró en RAM")
                     for pag in self.simulador.RAM.contenido:
                         if pag.Ptr==siguiente.Ptr:
                             pag.Contador=0

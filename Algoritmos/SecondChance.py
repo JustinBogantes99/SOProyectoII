@@ -34,9 +34,6 @@ class SecondChance:
                 if key== pagina.Ptr:
                     value.MAddres= self.simulador.RAM.contenido.index(pagina)
 
-
-
-
     def simular(self):
         print("CorriendoSecondChance")
         while(len(self.simulador.varasBarajadas)>0):

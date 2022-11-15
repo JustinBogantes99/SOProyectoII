@@ -75,28 +75,28 @@ class PaginaSimulador(tk.Frame):
         self.tLRU = threading.Thread(target=self.lru)
         self.tSecondChance = threading.Thread(target=self.secondchance)
 
-        self.opt = ttk.Treeview(self.canvas_mmu_opt, height=35,selectmode ='none')
+        self.opt = ttk.Treeview(self.canvas_mmu_opt, height=30,selectmode ='none')
 
         sb1 = Scrollbar(self.canvas_mmu_opt, orient=VERTICAL)
         sb1.pack(side=RIGHT, fill=Y)
         self.opt.config(yscrollcommand=sb1.set)
         sb1.config(command=self.opt.yview)
 
-        self.alg = ttk.Treeview(self.canvas_mmu, height=35,selectmode ='none')
+        self.alg = ttk.Treeview(self.canvas_mmu, height=30,selectmode ='none')
 
         sb2 = Scrollbar(self.canvas_mmu, orient=VERTICAL)
         sb2.pack(side=RIGHT, fill=Y)
         self.alg.config(yscrollcommand=sb2.set)
         sb2.config(command=self.alg.yview)
 
-        self.tram = ttk.Treeview(self.frame_ram, height=35, selectmode ='none')
+        self.tram = ttk.Treeview(self.frame_ram, height=50, selectmode ='none')
 
         sb3 = Scrollbar(self.frame_ram, orient=VERTICAL)
         sb3.pack(side=RIGHT, fill=Y)
         self.tram.config(yscrollcommand=sb3.set)
         sb3.config(command=self.tram.yview)
 
-        self.tvram = ttk.Treeview(self.frame_vram, height=35, selectmode ='none')
+        self.tvram = ttk.Treeview(self.frame_vram, height=50, selectmode ='none')
 
         sb4 = Scrollbar(self.frame_vram, orient=VERTICAL)
         sb4.pack(side=RIGHT, fill=Y)

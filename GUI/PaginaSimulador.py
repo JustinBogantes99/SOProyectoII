@@ -313,7 +313,7 @@ class PaginaSimulador(tk.Frame):
         self.simulador_optimo.correr_algoritmo()
 
     def aging(self):
-        self.simulador = Simulador("Aging", self.tmp, self.controller.seed)
+        self.simulador = Simulador("LRU", self.tmp, self.controller.seed)
         self.simulador.correr_algoritmo()
 
     def lru(self):

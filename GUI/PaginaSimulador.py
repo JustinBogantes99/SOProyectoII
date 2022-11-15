@@ -78,7 +78,7 @@ class PaginaSimulador(tk.Frame):
         self.switch_window_button.pack(side="bottom", fill=tk.X)
 
 
-
+        self.lock = threading.Lock()
         self.tOptimo = threading.Thread(target=self.optimo)
         self.tAging = threading.Thread(target=self.aging)
         self.tRandom = threading.Thread(target=self.random)
@@ -230,21 +230,27 @@ class PaginaSimulador(tk.Frame):
             self.tstatsopt.insert('', 'end', values=("Paginas en Disco",self.simulador_optimo.stats.PaginasEnDisco))
             self.tstatsopt.insert('', 'end', values=("Porcentaje de la RAM",self.simulador_optimo.RAM.calcularProcentajeRAM()))
             self.tstatsopt.insert('', 'end', values=("Porcentaje de la VRAM",self.simulador_optimo.VRAM.calcularProcentajeVRAM()))
-            for pag in self.simulador_optimo.RAM.contenido:
-                self.tram.insert('', 'end', values=(pag.Ptr), tags=(pag.PID))
-            for item in self.simulador_optimo.MMU.listaDeCositas.items():
-                item = item[1]
-                self.opt.insert('', 'end', values=(item.pageID, 
-                                                    item.processID, 
-                                                    item.loaded, 
-                                                    item.LAddres, 
-                                                    item.MAddres, 
-                                                    item.DAddres, 
-                                                    item.time, 
-                                                    item.mark ), tags=(item.processID))
-            for pag in self.simulador.varasSinBarajar:
-                self.tram.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])
-                self.opt.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])                                       
+            self.lock.acquire()
+            try:
+                for pag in self.simulador_optimo.RAM.contenido:
+                    self.tram.insert('', 'end', values=(pag.Ptr), tags=(pag.PID))
+                
+                for item in self.simulador_optimo.MMU.listaDeCositas.items():
+                    item = item[1]
+                    self.opt.insert('', 'end', values=(item.pageID, 
+                                                        item.processID, 
+                                                        item.loaded, 
+                                                        item.LAddres, 
+                                                        item.MAddres, 
+                                                        item.DAddres, 
+                                                        item.time, 
+                                                        item.mark ), tags=(item.processID))
+                for pag in self.simulador.varasSinBarajar:
+                    self.tram.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])
+                    self.opt.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])
+            except RuntimeError:
+                pass
+            self.lock.release()                                    
         if not self.simulador == None:
             self.tstats.insert('', 'end', values=("Procesos", self.simulador.RAM.cantidadDeProcesos()))
             self.tstats.insert('', 'end', values=("Tiempo Simulado",self.simulador.stats.TiempoSimulado))
@@ -257,22 +263,26 @@ class PaginaSimulador(tk.Frame):
             self.tstats.insert('', 'end', values=("Paginas en Disco",self.simulador.stats.PaginasEnDisco))
             self.tstats.insert('', 'end', values=("Porcentaje de la RAM",self.simulador.RAM.calcularProcentajeRAM()))
             self.tstats.insert('', 'end', values=("Porcentaje de la VRAM",self.simulador.VRAM.calcularProcentajeVRAM()))
-            for pag in self.simulador.RAM.contenido:
-                self.tvram.insert('', 'end', values=(pag.Ptr), tags=(pag.PID))
-            for item in self.simulador.MMU.listaDeCositas.items():
-                item = item[1]
-                self.alg.insert('', 'end', values=(item.pageID, 
-                                                    item.processID, 
-                                                    item.loaded, 
-                                                    item.LAddres, 
-                                                    item.MAddres, 
-                                                    item.DAddres, 
-                                                    item.time, 
-                                                    item.mark ), tags=(item.processID))
-            for pag in self.simulador.varasSinBarajar:
-                self.tvram.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])
-                self.alg.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])
-
+            self.lock.acquire()
+            try:
+                for pag in self.simulador.RAM.contenido:
+                    self.tvram.insert('', 'end', values=(pag.Ptr), tags=(pag.PID))
+                for item in self.simulador.MMU.listaDeCositas.items():
+                    item = item[1]
+                    self.alg.insert('', 'end', values=(item.pageID, 
+                                                        item.processID, 
+                                                        item.loaded, 
+                                                        item.LAddres, 
+                                                        item.MAddres, 
+                                                        item.DAddres, 
+                                                        item.time, 
+                                                        item.mark ), tags=(item.processID))
+                for pag in self.simulador.varasSinBarajar:
+                    self.tvram.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])
+                    self.alg.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])
+            except RuntimeError:
+                pass
+            self.lock.release()
         self.sim = self.parent.after(500, self.draw)
 
     def salir(self):

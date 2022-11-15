@@ -56,8 +56,6 @@ class SecondChance:
                         self.paging_bueno(pagina_a_ram)
 
                     # La pagina no esta en VRAM - Metiendo a la RAM directamente
-                    print("VOY A AGREGAR")
-                    print(siguiente.Ptr, siguiente.PID)
                     self.simulador.RAM.contenido.append(siguiente)
                     self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter, len(self.simulador.RAM.contenido)-1, siguiente.mark, siguiente.Contador)
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado+1
@@ -120,16 +118,3 @@ class SecondChance:
             self.simulador.stats.FragmentacionInterna=self.simulador.RAM.calcularFragmentacionInterna()
             self.simulador.stats.PaginasEnMemoria= len(self.simulador.RAM.contenido)
             self.simulador.stats.PaginasEnDisco= len(self.simulador.VRAM.contenido)
-        print("\n\n\n")
-        print("RESULTADO FINAL DE LA SIMULACION")
-        print("---------------------")
-        print("Iteración", len(self.simulador.varasBarajadas))
-        print("Tomando la página PID", siguiente.PID, " Ptr", siguiente.Ptr)
-        print("Actualmente la RAM tiene: \n\n")
-        print(self.simulador.RAM.to_string())
-        print("Actualmente la VRAM tiene: \n\n")
-        print(self.simulador.VRAM.to_string())
-        print("Actualmente la MMU tiene: \n\n")
-        print(self.simulador.MMU.to_string())
-        print("\n\n\n")
-

@@ -13,44 +13,49 @@ import copy
 class PaginaSimulador(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        
-        label = tk.Label(self, text="Aqui va el simulador con las tablas")
+        self.controller = controller
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
+        label = tk.Label(self, text="Simulador")
         label.pack(padx=10)
 
-        frame_memoria=tk.Frame(self, width=1400, height=200)
-        frame_memoria.place(x=25,y=30)
+        self.frame_ram=tk.LabelFrame(self, text="RAM-OPT")
+        self.frame_ram.place(x=25,y=40)
 
-        frame_opt=tk.Frame(self,  height=600, width=650)
-        frame_opt.place(x=25,y=220)
+        self.frame_vram=tk.LabelFrame(self, text="RAM-ALG")
+        self.frame_vram.place(x=100,y=40)
 
-        frame_algoritmo=tk.Frame(self, height=600, width=650)
-        frame_algoritmo.place(x=775,y=220)
+        frame_opt=tk.LabelFrame(self, text="Algoritmo óptimo")
+        frame_opt.place(x=180,y=40)
 
-        frame_stats_opt=tk.Frame(self,height=150, width=650)
-        frame_stats_opt.place(x=25,y=850)
+        frame_algoritmo=tk.LabelFrame(self, text="Algoritmo escogido")
+        frame_algoritmo.place(x=870,y=40)
 
-        frame_stats=tk.Frame(self,height=150, width=650)
-        frame_stats.place(x=775,y=850)
+        self.frame_stats_opt=tk.LabelFrame(self, text="Estadísticas óptimo")
+        self.frame_stats_opt.place(x=180,y=810)
 
-        self.canvas_memory = tk.Canvas(frame_memoria, bg="green", width=1400, height=175)
-        self.canvas_memory.pack()
+        self.frame_stats=tk.LabelFrame(self, text="Algoritmo Escogido")
+        self.frame_stats.place(x=870,y=810)
 
-        self.canvas_mmu_opt = tk.Canvas(frame_opt, bg="blue", height=600, width=650)
+        #self.canvas_ram = tk.Canvas(frame_ram, bg="green", width=50, height=700)
+        #self.canvas_ram.pack()
+
+        #self.canvas_vram = tk.Canvas(self.frame_vram, bg="green", width=50, height=700)
+        #self.canvas_vram.pack()
+
+        self.canvas_mmu_opt = tk.Canvas(frame_opt, bg="blue", height=600, width=300)
         self.canvas_mmu_opt.pack()
 
         self.canvas_mmu = tk.Canvas(frame_algoritmo, bg="blue", height=600, width=650)
         self.canvas_mmu.pack()
 
-        self.canvas_stats_opt = tk.Canvas(frame_stats_opt, bg="yellow", height=150, width=650)
-        self.canvas_stats_opt.pack()
+        #self.canvas_stats_opt = tk.Canvas(frame_stats_opt, bg="yellow", height=150, width=650)
+        #self.canvas_stats_opt.pack()
 
-        self.canvas_stats = tk.Canvas(frame_stats, bg="yellow", height=150, width=650)
-        self.canvas_stats.pack()
+        #self.canvas_stats = tk.Canvas(frame_stats, bg="yellow", height=150, width=650)
+        #self.canvas_stats.pack()
 
-        self.label_test = tk.Label(self.canvas_stats_opt, text="Buenas")
-        self.label_test.place(x=10,y=10)
 
-        self.controller = controller
         self.tmp = []
         self.tamanio=(len(self.controller.fileContent)-1)+(len(self.controller.fileContent)*2)
         self.sim = None
@@ -70,14 +75,14 @@ class PaginaSimulador(tk.Frame):
         self.tLRU = threading.Thread(target=self.lru)
         self.tSecondChance = threading.Thread(target=self.secondchance)
 
-        self.opt = ttk.Treeview(self.canvas_mmu_opt, selectmode ='none')
+        self.opt = ttk.Treeview(self.canvas_mmu_opt, height=40,selectmode ='none')
         sb = Scrollbar(self.canvas_mmu_opt, orient=VERTICAL)
         sb.pack(side=RIGHT, fill=Y)
 
         self.opt.config(yscrollcommand=sb.set)
         sb.config(command=self.opt.yview)
 
-        self.alg = ttk.Treeview(self.canvas_mmu, selectmode ='none')
+        self.alg = ttk.Treeview(self.canvas_mmu, height=40,selectmode ='none')
 
         sb = Scrollbar(self.canvas_mmu, orient=VERTICAL)
         sb.pack(side=RIGHT, fill=Y)
@@ -85,8 +90,42 @@ class PaginaSimulador(tk.Frame):
         self.alg.config(yscrollcommand=sb.set)
         sb.config(command=self.alg.yview)
 
+        self.tram = ttk.Treeview(self.frame_ram, height=40, selectmode ='none')
+        self.tvram = ttk.Treeview(self.frame_vram, height=40, selectmode ='none')
+        self.tstatsopt = ttk.Treeview(self.frame_stats_opt, height=11, selectmode ='none')
+        self.tstats = ttk.Treeview(self.frame_stats, height=11, selectmode ='none')
+
         self.opt['columns'] = ("Ptr", "PID", "LOADED", "L-ADDR", "M-ADDR", "D-ADDR", "LOADED-T", "Mark")
         self.alg['columns'] = ("Ptr", "PID", "LOADED", "L-ADDR", "M-ADDR", "D-ADDR", "LOADED-T", "Mark")
+        self.tram['columns'] = ("Ptr")
+        self.tvram['columns'] = ("Ptr")
+        self.tstatsopt['columns'] = ("Estadistica", "Valor")
+        self.tstats['columns'] = ("Estadistica", "Valor")
+        self.tram.column("#0", width=0)
+        self.tram.column("Ptr", anchor=CENTER, width=50)
+        self.tram.heading("Ptr", text="Ptr", anchor=CENTER)
+        self.tram.pack()
+
+        self.tstatsopt.column("#0", width=0)
+        self.tstatsopt.column("Estadistica", anchor=CENTER, width=300)
+        self.tstatsopt.heading("Estadistica", text="Stat", anchor=CENTER)
+        self.tstatsopt.column("Valor", anchor=CENTER, width=300)
+        self.tstatsopt.heading("Valor", text="#", anchor=CENTER)
+        self.tstatsopt.pack()
+
+        self.tstats.column("#0", width=0)
+        self.tstats.column("Estadistica", anchor=CENTER, width=300)
+        self.tstats.heading("Estadistica", text="Stat", anchor=CENTER)
+        self.tstats.column("Valor", anchor=CENTER, width=300)
+        self.tstats.heading("Valor", text="#", anchor=CENTER)
+        self.tstats.pack()
+
+
+        self.tvram.column("#0", width=0)
+        self.tvram.column("Ptr", anchor=CENTER, width=50)
+        self.tvram.heading("Ptr", text="Ptr", anchor=CENTER)
+        self.tvram.pack()
+
 
         self.opt.column("#0", width=0)
         self.opt.column("Ptr", anchor=CENTER, width=80)
@@ -107,7 +146,7 @@ class PaginaSimulador(tk.Frame):
         self.opt.heading("D-ADDR", text="D-ADDR", anchor=CENTER)
         self.opt.heading("LOADED-T", text="LOADED-T", anchor=CENTER)
         self.opt.heading("Mark", text="Mark", anchor=CENTER)
-        self.opt.pack()
+        self.opt.pack(expand=True, fill="both")
 
         self.alg.column("#0", width=0)
         self.alg.column("Ptr", anchor=CENTER, width=80)
@@ -132,15 +171,31 @@ class PaginaSimulador(tk.Frame):
         self.draw()
 
 
-
     def draw(self):
-        self.label_test.config(text = str(random.randint(0,5)))
         for item in self.opt.get_children():
             self.opt.delete(item)
         for item in self.alg.get_children():
             self.alg.delete(item)
+        for item in self.tram.get_children():
+            self.tram.delete(item)
+        for item in self.tvram.get_children():
+            self.tvram.delete(item)
+        for item in self.tstatsopt.get_children():
+            self.tstatsopt.delete(item)
+        for item in self.tstats.get_children():
+            self.tstats.delete(item)
+
 
         if not self.simulador_optimo == None:
+            self.tstatsopt.insert('', 'end', values=("Tiempo Simulado",self.simulador_optimo.stats.TiempoSimulado))
+            self.tstatsopt.insert('', 'end', values=("Tiempo Trashing",self.simulador_optimo.stats.TiempoTrashing))
+            self.tstatsopt.insert('', 'end', values=("Fragmentacion Interna",self.simulador_optimo.stats.FragmentacionInterna))
+            self.tstatsopt.insert('', 'end', values=("RAM Utilizada",self.simulador_optimo.stats.RAMUtilizada))
+            self.tstatsopt.insert('', 'end', values=("VRAM Utilizados",self.simulador_optimo.stats.VRAMUtilizada))
+            self.tstatsopt.insert('', 'end', values=("Paginas en Memoria",self.simulador_optimo.stats.PaginasEnMemoria))
+            self.tstatsopt.insert('', 'end', values=("Paginas en Disco",self.simulador_optimo.stats.PaginasEnDisco))
+            for pag in self.simulador_optimo.RAM.contenido:
+                self.tram.insert('', 'end', values=(pag.Ptr))
             for item in self.simulador_optimo.MMU.listaDeCositas.items():
                 item = item[1]
                 self.opt.insert('', 'end', values=(item.pageID, 
@@ -152,6 +207,15 @@ class PaginaSimulador(tk.Frame):
                                                     item.time, 
                                                     item.mark ))
         if not self.simulador == None:
+            self.tstats.insert('', 'end', values=("Tiempo Simulado",self.simulador.stats.TiempoSimulado))
+            self.tstats.insert('', 'end', values=("Tiempo Trashing",self.simulador.stats.TiempoTrashing))
+            self.tstats.insert('', 'end', values=("Fragmentacion Interna",self.simulador.stats.FragmentacionInterna))
+            self.tstats.insert('', 'end', values=("RAM Utilizada",self.simulador.stats.RAMUtilizada))
+            self.tstats.insert('', 'end', values=("VRAM Utilizados",self.simulador.stats.VRAMUtilizada))
+            self.tstats.insert('', 'end', values=("Paginas en Memoria",self.simulador.stats.PaginasEnMemoria))
+            self.tstats.insert('', 'end', values=("Paginas en Disco",self.simulador.stats.PaginasEnDisco))
+            for pag in self.simulador.RAM.contenido:
+                self.tvram.insert('', 'end', values=(pag.Ptr))
             for item in self.simulador.MMU.listaDeCositas.items():
                 item = item[1]
                 self.alg.insert('', 'end', values=(item.pageID, 

@@ -65,7 +65,6 @@ class Optimo:
 
                     # La página se encontró en la VRAM
                     if self.simulador.VRAM.encontrar(siguiente.Ptr)==True:
-                        print("VRAM NO FULL PAGE FAULT - TOMANDO PAGINA DE VRAM")
                         for index, pagina in enumerate(self.simulador.VRAM.contenido):
                             if pagina.Ptr == siguiente.Ptr:
                                 self.simulador.VRAM.contenido.pop(index)
@@ -89,7 +88,6 @@ class Optimo:
             else:
                 # La Pagina no está en la RAM
                 if not self.simulador.RAM.encontrar(siguiente.Ptr):
-                    print("PAGE FAULT - LA PAGINA NO ESTA EN LA RAM")
                     maxIndx=0 #index de la pagina mas tardada
                     max=0 #accesos faltantes
                     for x in range(len(self.simulador.RAM.contenido)):
@@ -98,17 +96,10 @@ class Optimo:
                             max = accessosfaltantes
                             maxIndx = x
                     # La página se encontró en la VRAM
-                    print("REVISANDO")
-                    print(siguiente.to_string())
-                    print(self.simulador.VRAM.to_string())
                     if self.simulador.VRAM.encontrar(siguiente.Ptr)==True:
-                        print("PAGE FAULT - TOMANDO PAGINA DE VRAM")
                         for index, pagina in enumerate(self.simulador.VRAM.contenido):
-                            print("BUSCANDO PAGINA PARA ELIMINAR DE VRAM")
                             if pagina.Ptr == siguiente.Ptr:
-                                print("ENCONTRE LA PAGINA QUE OCUPO ELIMINAR")
-                                #self.simulador.VRAM.contenido.pop(index)
-                                self.simulador.VRAM.sacar(index)
+                                self.simulador.VRAM.contenido.pop(index)
                                 break
                     
                     #self.simulador.VRAM.contenido.append(self.simulador.RAM.contenido[maxIndx])

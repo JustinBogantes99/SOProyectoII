@@ -20,8 +20,6 @@ class Simulador:
     self.ListadeAccesos = []
     self.ListaAccesosBarajados = []
     self.varasSinBarajar = []
-    print("ESTE ES EL SEED")
-    print(seed)
     random.seed(self.seed)
     self.RAM = Memoria(100, self.seed)
     self.VRAM = Memoria(100, self.seed)
@@ -54,9 +52,6 @@ class Simulador:
           lista+=[proceso]
       else:
         lista+=[list(map(int, self.txt[i]))]
-    print("\n\n\n")
-    print("Lista enteros") 
-    print(lista)
     self.ListadeAccesos=lista
 
   def agregarProcesos(self,max,proceso):
@@ -87,6 +82,10 @@ class Simulador:
       if self.tipoSimulador == "SecondChance":
         nuevaPagina.mark = False
       self.varasSinBarajar.append(nuevaPagina)
+
+    print("Lista de Accesos Barajados")
+    print(self.ListaAccesosBarajados)
+    print('\n\n')
 
     for pagina in self.ListaAccesosBarajados:
       nuevaPagina= Pagina()

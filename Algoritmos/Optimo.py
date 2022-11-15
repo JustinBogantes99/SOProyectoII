@@ -41,7 +41,7 @@ class Optimo:
             siguiente=self.simulador.varasBarajadas.pop(0)
 
             # La RAM todavía no está llena
-            if len(self.simulador.RAM.contenido) < 5:
+            if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize:
 
                 # No se pudo encontrar la página en la RAM
                 if not self.simulador.RAM.encontrar(siguiente.Ptr):

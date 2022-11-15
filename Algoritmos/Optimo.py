@@ -106,15 +106,15 @@ class Optimo:
                     self.simulador.VRAM.meter(self.simulador.RAM.contenido[maxIndx])
                     #actualizar valor en MMU de la pagina enviada a VRAM
                     DAddres= self.simulador.VRAM.encontrar_direccion(self.simulador.RAM.contenido[maxIndx].Ptr)
-                    self.simulador.MMU.actualizar(self.simulador.RAM.contenido[maxIndx].Ptr,False,None,DAddres,None,None)
+                    self.simulador.MMU.actualizar(self.simulador.RAM.contenido[maxIndx].Ptr,False,"-",DAddres,"-","-")
 
                     self.simulador.RAM.contenido[maxIndx] = siguiente
                     self.simulador.stats.TiempoTrashing  = self.simulador.stats.TiempoTrashing  + 5
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 6
 
                     if  siguiente.Ptr in self.simulador.MMU.listaDeCositas:
-                        #self.simulador.MMU.actualizar(siguiente.Ptr,False,None,len(self.simulador.VRAM.contenido)-1,None,None)
-                        self.simulador.MMU.actualizar(siguiente.Ptr,True,maxIndx,None,"-","-")
+                        #self.simulador.MMU.actualizar(siguiente.Ptr,False,"-",len(self.simulador.VRAM.contenido)-1,"-","-")
+                        self.simulador.MMU.actualizar(siguiente.Ptr,True,maxIndx,"-","-","-")
                     else:
                         #Agregar la pagina a la mmu si no estaba en ram ni vram
                         self.simulador.MMU.agregar(siguiente.PID,siguiente.Ptr,self.simulador.MMU.logicAddresCounter,maxIndx,"-","-")

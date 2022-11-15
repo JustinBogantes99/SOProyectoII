@@ -32,10 +32,10 @@ class PaginaSimulador(tk.Frame):
         frame_algoritmo.place(x=870,y=40)
 
         self.frame_stats_opt=tk.LabelFrame(self, text="Estadísticas óptimo")
-        self.frame_stats_opt.place(x=180,y=810)
+        self.frame_stats_opt.place(x=180,y=740)
 
         self.frame_stats=tk.LabelFrame(self, text="Algoritmo Escogido")
-        self.frame_stats.place(x=870,y=810)
+        self.frame_stats.place(x=870,y=740)
 
         #self.canvas_ram = tk.Canvas(frame_ram, bg="green", width=50, height=700)
         #self.canvas_ram.pack()
@@ -75,25 +75,47 @@ class PaginaSimulador(tk.Frame):
         self.tLRU = threading.Thread(target=self.lru)
         self.tSecondChance = threading.Thread(target=self.secondchance)
 
-        self.opt = ttk.Treeview(self.canvas_mmu_opt, height=40,selectmode ='none')
-        sb = Scrollbar(self.canvas_mmu_opt, orient=VERTICAL)
-        sb.pack(side=RIGHT, fill=Y)
+        self.opt = ttk.Treeview(self.canvas_mmu_opt, height=35,selectmode ='none')
 
-        self.opt.config(yscrollcommand=sb.set)
-        sb.config(command=self.opt.yview)
+        sb1 = Scrollbar(self.canvas_mmu_opt, orient=VERTICAL)
+        sb1.pack(side=RIGHT, fill=Y)
+        self.opt.config(yscrollcommand=sb1.set)
+        sb1.config(command=self.opt.yview)
 
-        self.alg = ttk.Treeview(self.canvas_mmu, height=40,selectmode ='none')
+        self.alg = ttk.Treeview(self.canvas_mmu, height=35,selectmode ='none')
 
-        sb = Scrollbar(self.canvas_mmu, orient=VERTICAL)
-        sb.pack(side=RIGHT, fill=Y)
+        sb2 = Scrollbar(self.canvas_mmu, orient=VERTICAL)
+        sb2.pack(side=RIGHT, fill=Y)
+        self.alg.config(yscrollcommand=sb2.set)
+        sb2.config(command=self.alg.yview)
 
-        self.alg.config(yscrollcommand=sb.set)
-        sb.config(command=self.alg.yview)
+        self.tram = ttk.Treeview(self.frame_ram, height=35, selectmode ='none')
 
-        self.tram = ttk.Treeview(self.frame_ram, height=40, selectmode ='none')
-        self.tvram = ttk.Treeview(self.frame_vram, height=40, selectmode ='none')
-        self.tstatsopt = ttk.Treeview(self.frame_stats_opt, height=11, selectmode ='none')
-        self.tstats = ttk.Treeview(self.frame_stats, height=11, selectmode ='none')
+        sb3 = Scrollbar(self.frame_ram, orient=VERTICAL)
+        sb3.pack(side=RIGHT, fill=Y)
+        self.tram.config(yscrollcommand=sb3.set)
+        sb3.config(command=self.tram.yview)
+
+        self.tvram = ttk.Treeview(self.frame_vram, height=35, selectmode ='none')
+
+        sb4 = Scrollbar(self.frame_vram, orient=VERTICAL)
+        sb4.pack(side=RIGHT, fill=Y)
+        self.tvram.config(yscrollcommand=sb4.set)
+        sb4.config(command=self.tvram.yview)
+
+        self.tstatsopt = ttk.Treeview(self.frame_stats_opt, height=7, selectmode ='none')
+
+        sb5 = Scrollbar(self.frame_stats_opt, orient=VERTICAL)
+        sb5.pack(side=RIGHT, fill=Y)
+        self.tstatsopt.config(yscrollcommand=sb5.set)
+        sb5.config(command=self.tstatsopt.yview)
+
+        self.tstats = ttk.Treeview(self.frame_stats, height=7, selectmode ='none')
+
+        sb6 = Scrollbar(self.frame_stats, orient=VERTICAL)
+        sb6.pack(side=RIGHT, fill=Y)
+        self.tstats.config(yscrollcommand=sb6.set)
+        sb6.config(command=self.tstats.yview)
 
         self.opt['columns'] = ("Ptr", "PID", "LOADED", "L-ADDR", "M-ADDR", "D-ADDR", "LOADED-T", "Mark")
         self.alg['columns'] = ("Ptr", "PID", "LOADED", "L-ADDR", "M-ADDR", "D-ADDR", "LOADED-T", "Mark")

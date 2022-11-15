@@ -209,13 +209,17 @@ class PaginaSimulador(tk.Frame):
 
 
         if not self.simulador_optimo == None:
+            self.tstatsopt.insert('', 'end', values=("Procesos", self.simulador_optimo.RAM.cantidadDeProcesos()))
             self.tstatsopt.insert('', 'end', values=("Tiempo Simulado",self.simulador_optimo.stats.TiempoSimulado))
             self.tstatsopt.insert('', 'end', values=("Tiempo Trashing",self.simulador_optimo.stats.TiempoTrashing))
+            self.tstatsopt.insert('', 'end', values=("Porcentaje de Trashing", self.simulador_optimo.stats.porcentajeTrashing()))
             self.tstatsopt.insert('', 'end', values=("Fragmentacion Interna",self.simulador_optimo.stats.FragmentacionInterna))
             self.tstatsopt.insert('', 'end', values=("RAM Utilizada",self.simulador_optimo.stats.RAMUtilizada))
             self.tstatsopt.insert('', 'end', values=("VRAM Utilizados",self.simulador_optimo.stats.VRAMUtilizada))
             self.tstatsopt.insert('', 'end', values=("Paginas en Memoria",self.simulador_optimo.stats.PaginasEnMemoria))
             self.tstatsopt.insert('', 'end', values=("Paginas en Disco",self.simulador_optimo.stats.PaginasEnDisco))
+            self.tstatsopt.insert('', 'end', values=("Porcentaje de la RAM",self.simulador_optimo.RAM.calcularProcentajeRAM()))
+            self.tstatsopt.insert('', 'end', values=("Porcentaje de la VRAM",self.simulador_optimo.VRAM.calcularProcentajeVRAM()))
             for pag in self.simulador_optimo.RAM.contenido:
                 self.tram.insert('', 'end', values=(pag.Ptr), tags=(pag.PID))
             for item in self.simulador_optimo.MMU.listaDeCositas.items():
@@ -232,13 +236,17 @@ class PaginaSimulador(tk.Frame):
                 self.tram.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])
                 self.opt.tag_configure(pag.PID, background=self.simulador.colorcitos[pag.PID])                                       
         if not self.simulador == None:
+            self.tstats.insert('', 'end', values=("Procesos", self.simulador.RAM.cantidadDeProcesos()))
             self.tstats.insert('', 'end', values=("Tiempo Simulado",self.simulador.stats.TiempoSimulado))
             self.tstats.insert('', 'end', values=("Tiempo Trashing",self.simulador.stats.TiempoTrashing))
+            self.tstats.insert('', 'end', values=("Porcentaje de Trashing", self.simulador.stats.porcentajeTrashing()))
             self.tstats.insert('', 'end', values=("Fragmentacion Interna",self.simulador.stats.FragmentacionInterna))
             self.tstats.insert('', 'end', values=("RAM Utilizada",self.simulador.stats.RAMUtilizada))
             self.tstats.insert('', 'end', values=("VRAM Utilizados",self.simulador.stats.VRAMUtilizada))
             self.tstats.insert('', 'end', values=("Paginas en Memoria",self.simulador.stats.PaginasEnMemoria))
             self.tstats.insert('', 'end', values=("Paginas en Disco",self.simulador.stats.PaginasEnDisco))
+            self.tstats.insert('', 'end', values=("Porcentaje de la RAM",self.simulador.RAM.calcularProcentajeRAM()))
+            self.tstats.insert('', 'end', values=("Porcentaje de la VRAM",self.simulador.VRAM.calcularProcentajeVRAM()))
             for pag in self.simulador.RAM.contenido:
                 self.tvram.insert('', 'end', values=(pag.Ptr), tags=(pag.PID))
             for item in self.simulador.MMU.listaDeCositas.items():

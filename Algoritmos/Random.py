@@ -10,8 +10,8 @@ class Random:
 
 
     def calcularRAMUtilizadaYVRAM(self):
-        self.simulador.stats.RAMUtilizada=len(self.simulador.RAM.contenido)*4000
-        self.simulador.stats.VRAMUtilizada = len(self.simulador.VRAM.contenido)*4000
+        self.simulador.stats.RAMUtilizada=len(self.simulador.RAM.contenido)*4096
+        self.simulador.stats.VRAMUtilizada = len(self.simulador.VRAM.contenido)*4096
     
     
     def printMemorias(self):
@@ -45,7 +45,7 @@ class Random:
             print("Actualmente la MMU tiene: \n\n")
             print(self.simulador.MMU.to_string())
  
-            if len(self.simulador.RAM.contenido) < 5:
+            if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize:
                 if self.simulador.RAM.encontrar(siguiente.Ptr):
                     self.simulador.stats.TiempoSimulado = self.simulador.stats.TiempoSimulado + 1
                 else:

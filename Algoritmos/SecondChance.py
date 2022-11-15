@@ -44,7 +44,7 @@ class SecondChance:
             
 
             # Si no se ha llenado la RAM
-            if len(self.simulador.RAM.contenido) < 5: # self.simulador.RAMSize
+            if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize: # self.simulador.RAMSize
                 # La pagina no se encuentra en RAM
                 if self.simulador.RAM.encontrar(siguiente.Ptr)==False:
 

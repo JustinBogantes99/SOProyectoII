@@ -18,7 +18,7 @@ class Aging:
         self.fragmentacionInternaAging = 0
 
         for pagina in self.simulador.RAM:
-            self.simulador.stats.FragmentacionInterna = self.simulador.stats.FragmentacionInterna + ((4000 - pagina.Size) / 1000)
+            self.simulador.stats.FragmentacionInterna = self.simulador.stats.FragmentacionInterna + ((4096 - pagina.Size) / 1024)
 
         return self.simulador.stats.FragmentacionInterna
 

@@ -7,4 +7,7 @@ class Stats:
         self.VRAMUtilizada=0
         self.PaginasEnMemoria=0
         self.PaginasEnDisco=0
+
+    def porcentajeTrashing(self):
+        return (self.TiempoTrashing/self.TiempoSimulado)*100
         

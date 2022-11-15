@@ -11,7 +11,7 @@ class LRU:
     def calcularFragmentacionInternaLRU(self):
         self.FragmentacionInternaOpt=0
         for pagina in self.simulador.RAM:
-            self.simulador.stats.FragmentacionInterna = self.simulador.stats.FragmentacionInterna + ((4000-pagina.Size)/1000)
+            self.simulador.stats.FragmentacionInterna = self.simulador.stats.FragmentacionInterna + ((4096-pagina.Size)/1024)
         return self.simulador.stats.FragmentacionInterna
 
     def calcularRAMUtilizadaYVRAM(self):
@@ -58,7 +58,7 @@ class LRU:
             print(self.simulador.MMU.to_string())
             print("\n\n\n")
             # Si no se ha llenado la RAM
-            if len(self.simulador.RAM.contenido) < 5:#self.simulador.RAMSize
+            if len(self.simulador.RAM.contenido) < self.simulador.RAM.RAMSize:#self.simulador.RAMSize
                 print("La RAM no está llena, metiendo un nuevo proceso")
 
                 if self.simulador.RAM.encontrar(siguiente.Ptr)==False:

@@ -222,7 +222,11 @@ class PaginaSimulador(tk.Frame):
             self.tstatsopt.insert('', 'end', values=("Procesos", self.simulador_optimo.RAM.cantidadDeProcesos()))
             self.tstatsopt.insert('', 'end', values=("Tiempo Simulado",self.simulador_optimo.stats.TiempoSimulado))
             self.tstatsopt.insert('', 'end', values=("Tiempo Trashing",self.simulador_optimo.stats.TiempoTrashing))
-            self.tstatsopt.insert('', 'end', values=("Porcentaje de Trashing", self.simulador_optimo.stats.porcentajeTrashing()))
+            if self.simulador_optimo.stats.porcentajeTrashing() < 50:
+                self.tstatsopt.insert('', 'end', values=("Porcentaje de Trashing", self.simulador_optimo.stats.porcentajeTrashing()))
+            else:
+                self.tstatsopt.insert('', 'end', values=("Porcentaje de Trashing", self.simulador_optimo.stats.porcentajeTrashing()), tags=("red"))
+                self.tstatsopt.tag_configure("red", background="red")
             self.tstatsopt.insert('', 'end', values=("Fragmentacion Interna",self.simulador_optimo.stats.FragmentacionInterna))
             self.tstatsopt.insert('', 'end', values=("RAM Utilizada",self.simulador_optimo.stats.RAMUtilizada))
             self.tstatsopt.insert('', 'end', values=("VRAM Utilizados",self.simulador_optimo.stats.VRAMUtilizada))
@@ -255,7 +259,11 @@ class PaginaSimulador(tk.Frame):
             self.tstats.insert('', 'end', values=("Procesos", self.simulador.RAM.cantidadDeProcesos()))
             self.tstats.insert('', 'end', values=("Tiempo Simulado",self.simulador.stats.TiempoSimulado))
             self.tstats.insert('', 'end', values=("Tiempo Trashing",self.simulador.stats.TiempoTrashing))
-            self.tstats.insert('', 'end', values=("Porcentaje de Trashing", self.simulador.stats.porcentajeTrashing()))
+            if self.simulador.stats.porcentajeTrashing() < 50:
+                self.tstats.insert('', 'end', values=("Porcentaje de Trashing", self.simulador.stats.porcentajeTrashing()))
+            else:
+                self.tstats.insert('', 'end', values=("Porcentaje de Trashing", self.simulador.stats.porcentajeTrashing()), tags=("red"))
+                self.tstats.tag_configure("red", background="red")
             self.tstats.insert('', 'end', values=("Fragmentacion Interna",self.simulador.stats.FragmentacionInterna))
             self.tstats.insert('', 'end', values=("RAM Utilizada",self.simulador.stats.RAMUtilizada))
             self.tstats.insert('', 'end', values=("VRAM Utilizados",self.simulador.stats.VRAMUtilizada))
